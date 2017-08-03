@@ -230,7 +230,9 @@ static SQRPlayer * instancePlayer;
         }
         
         [self playMedia:self.playItemQueue[_playingIndex]];
-    }else {
+    }else if(_playbackState != SQRMediaPlaybackStatePlaying) {
+        NSLog(@"[player debug]stop. becase player have reach queue end");
+        [self stop];
     }
 }
 
