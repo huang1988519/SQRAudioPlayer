@@ -43,6 +43,16 @@ if ([_player playbackState] == SQRMediaPlaybackStatePlaying) {
 ```
 
 
+设置播放位置并播放
+
+```
+[_player prepareToPlay:item complete:^(AVPlayerItem *avitem, NSError *error) {
+        [_player seekTo:400];
+        [_player play];
+    }];
+```
+
+
 代理
 ```
 #pragma mark - delegate
