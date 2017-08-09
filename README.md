@@ -74,5 +74,14 @@ if ([_player playbackState] == SQRMediaPlaybackStatePlaying) {
     float progress = [player currentPlaybackTime] / [player currentPlaybackDuration];
     [_slider setValue:progress animated:YES];
 }
+/* 播放被终端。 type 为被中断理由*/
+- (void)mediaPlayerDidInterrupt:(SQRPlayer *)player interruptState:(AVAudioSessionInterruptionType)type
+{
+}
+/* 播放输出源变化。 切换到外设时音乐继续播放； 切换到手机扬声器时音乐暂停。*/
+- (void)mediaPlayerDidChangeAudioRoute:(SQRPlayer *)player
+{
+}
 
 ```
+
