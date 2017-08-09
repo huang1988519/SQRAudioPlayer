@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../classes/SQRPlayer.m"
-            timestampString = "523459157.620885"
+            timestampString = "523520287.503348"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "359"
-            endingLineNumber = "359"
-            landmarkName = "-playerItemDidReachEnd:"
+            startingLineNumber = "300"
+            endingLineNumber = "300"
+            landmarkName = "-playPreviouseItem"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

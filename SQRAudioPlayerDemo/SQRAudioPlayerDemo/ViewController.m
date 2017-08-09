@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 #import "SQRPlayer.h"
+#import "SQRMediaPlayer.h"
+
 
 @interface ViewController ()<SQRMediaPlayerDelegate>
 {
@@ -58,9 +60,12 @@
     item2.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group12/M00/1C/AD/wKgDW1V39AfDOSDwAE7IowCHNWQ865.m4a"];
     
     SQRMediaItem * item3 = [SQRMediaItem new];
-    item3.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group11/M03/1D/EF/wKgDbVV5B3bjxcFCAFLbZMLGZbg032.m4a"];
+    item3.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group8/M08/1C/A3/wKgDYVV3xTizBpzwAEvysDE32Lk219.m4a"];
     
-    [_player setQueue:@[item1,item2,item3]];
+    SQRMediaItem * item4 = [SQRMediaItem new];
+    item4.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group7/M09/2D/65/wKgDWlWKSmOB3Sd6AFOahV91Rwo643.m4a"];
+    
+    [_player setQueue:@[item1,item2,item3,item4]];
 }
 - (IBAction)seekTo:(UISlider *)slider {
     if ([_player playbackState] == SQRMediaPlaybackStatePlaying) {
@@ -77,16 +82,19 @@
 }
 
 -(void)mediaPlayerDidUpdateBufferProgress:(float)progress player:(SQRPlayer *)player media:(SQRMediaItem *)item {
-    NSLog(@"[demo] play buffer progress: %0.2f",progress);
+//    LOG_I(@"play buffer progress: %0.2f",progress);
     [self.progress setProgress:progress];
 }
 
 - (void)mediaPlayerDidStartPlaying:(SQRPlayer *)player media:(SQRMediaItem *)item {
-    NSLog(@"[demo] player is playing: %@",item.assetUrl.absoluteString);
+    LOG_I(@"player is playing: %@",item.assetUrl.absoluteString);
 }
 
 - (void)mediaPlayerDidChangedPlaybackTime:(SQRPlayer *)player {
     float progress = [player currentPlaybackTime] / [player currentPlaybackDuration];
-    [_slider setValue:progress animated:YES];
+    
+    if (!_slider.isTracking) {
+        [_slider setValue:progress animated:YES];
+    }
 }
 @end
