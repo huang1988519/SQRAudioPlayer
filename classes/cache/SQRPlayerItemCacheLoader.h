@@ -1,7 +1,7 @@
 
 //
 // Created by huanwh on 2017/7/31.
-//  Copyright © 2016年 Chengyin. All rights reserved.
+
 //
 
 #import <Foundation/Foundation.h>
@@ -14,4 +14,16 @@
 + (instancetype)cacheLoaderWithCacheFilePath:(NSString *)cacheFilePath;
 - (instancetype)initWithCacheFilePath:(NSString *)cacheFilePath;
 + (void)removeCacheWithCacheFilePath:(NSString *)cacheFilePath;
+
+/**
+ 删除过期文件
+ 
+  * 一天之前的文件删除
+  * 超过十个上限的文件删除
+ */
++ (void)removeExpireFiles;
+/**
+ *  清理所有音频缓存
+ */
++ (void)removeAllAudioCache;
 @end

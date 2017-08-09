@@ -1,11 +1,13 @@
 //
 //  Created by huanwh on 2017/7/31.
-//  Copyright © 2016年 Chengyin. All rights reserved.
+
 //
 
 #import "SQRPlayerItemRemoteCacheTask.h"
 #import "SQRPlayerItemCacheFile.h"
 #import "SQRCacheSupportUtils.h"
+#import "SQRMediaPlayer.h"
+
 
 @interface SQRPlayerItemRemoteCacheTask ()<NSURLConnectionDataDelegate>
 {
@@ -23,11 +25,14 @@
 
 @property (assign, nonatomic, getter = isExecuting) BOOL executing;
 @property (assign, nonatomic, getter = isFinished) BOOL finished;
+//@property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
+
 @end
 
 @implementation SQRPlayerItemRemoteCacheTask
 @synthesize executing = _executing;
 @synthesize finished = _finished;
+//@synthesize cancelled = _cancelled;
 
 - (void)main
 {
@@ -48,8 +53,12 @@
 
 - (void)handleFinished
 {
-    if (self.finishBlock)
+    if (!_loadingRequest) {
+        LOG_I(@"远程请求持有请求 被释放",nil);
+    }
+    if (self.finishBlock && _loadingRequest)
     {
+        LOG_I(@"远程请求回调",nil);
         self.finishBlock(self,_error);
     }
     [self setExecuting:NO];
@@ -141,16 +150,25 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    if (data.bytes && [_cacheFile saveData:data atOffset:_offset synchronize:NO])
+    if (data.bytes && data.length<=2) {
+        _dataSaved = YES;
+        _offset += [data length];
+        
+        [_loadingRequest.dataRequest respondWithData:data];
+    }
+    else if (data.bytes && [_cacheFile saveData:data atOffset:_offset synchronize:NO])
     {
         _dataSaved = YES;
         _offset += [data length];
+        
         [_loadingRequest.dataRequest respondWithData:data];
     }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    LOG_I(@"远程请求完成",nil);
+
     [self synchronizeCacheFileIfNeeded];
     [self stopRunLoop];
 }
@@ -175,4 +193,5 @@
     _executing = executing;
     [self didChangeValueForKey:@"isExecuting"];
 }
+
 @end

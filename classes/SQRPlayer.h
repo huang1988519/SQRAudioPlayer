@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "SQRMediaItem.h"
+#import <AVFoundation/AVFoundation.h>
+
 
 @class SQRPlayer;
 
@@ -36,8 +38,17 @@ typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
 - (void)mediaPlayerDidSFinishPlaying:(SQRPlayer *)player media:(SQRMediaItem *)item;
 - (void)mediaPlayerDidStop:(SQRPlayer *)player media:(SQRMediaItem *)item;
 - (void)mediaPlayerDidFailedWithError:(NSError *)error player:(SQRPlayer *)player media:(SQRMediaItem *)item;
+- (void)mediaPlayerRetryNext:(SQRPlayer *)player error:(NSError *)error media:(SQRMediaItem *)item;
+
+/// 应用程序被中断
+- (void)mediaPlayerDidInterrupt:(SQRPlayer *)player interruptState:(AVAudioSessionInterruptionType)type;
+- (void)mediaPlayerDidChangeAudioRoute:(SQRPlayer *)player;
+
+
 
 - (UIImage *)mediaPlayerArtworkImage:(SQRPlayer *)player media:(SQRMediaItem *)item;
+
+
 @end
 
 
@@ -68,6 +79,10 @@ typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
 - (void)playNextItem;
 - (void)playPreviouseItem;
 
+/** 获取当前播放item*/
+- (SQRMediaItem *)currentPlayItem;
+
+- (void)prepareToPlay:(SQRMediaItem *)item complete:(void(^)(AVPlayerItem *avitem, NSError *error))completeHandle;
 /* 快进 */
 - (void)seekTo:(NSTimeInterval)time;
 

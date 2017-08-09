@@ -8,6 +8,41 @@
 
 #import "SQRMediaItem.h"
 
+@interface SQRMediaItem ()
+{
+    NSUInteger _retryIndex;
+    NSURL * _currentURL;
+}
+@end
+
 @implementation SQRMediaItem
 
+-(instancetype)init {
+    self = [super init];
+    if (self) {
+        _retryIndex = 0;
+    }
+    return self;
+}
+
+
+- (BOOL)retryNext {
+    if (_retryIndex < _assetUrls.count) {
+        _retryIndex++;
+        return YES;
+    }
+    return NO;
+}
+
+-(NSURL *)currentUrl {
+    if (_assetUrls && _retryIndex<_assetUrls.count) {
+        return _assetUrls[_retryIndex];
+    }
+    
+    return nil;
+}
+
+-(NSUInteger)retryIndex {
+    return _retryIndex;
+}
 @end

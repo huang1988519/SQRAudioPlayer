@@ -10,15 +10,19 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AVPlayerItem+SQRCacheSupport.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "SQRMediaPlayer.h"
+
 
 @interface SQRPlayer()
 {
-    id<NSObject>_timeObserver;
+    __weak id<NSObject>_timeObserver;
     NSInteger _playingIndex;
+    BOOL      _interrupt; // 是否是被外部应用打断
 }
-@property (nonatomic, strong)AVQueuePlayer * player;
+@property (nonatomic, strong)AVPlayer * player;
 @property (nonatomic, strong)SQRMediaItem  * currentPlayItem;
 
+@property (nonatomic, strong)AVAsset * loadingAsset;
 @property (nonatomic, strong)NSMutableArray *playItemQueue;
 @end
 
@@ -42,8 +46,9 @@ static SQRPlayer * instancePlayer;
     self = [super init];
     if (self) {
         _playingIndex = 0;
+        _interrupt    = NO;
         
-        _player = [[AVQueuePlayer alloc] init];
+        _player = [[AVPlayer alloc] init];
         _playItemQueue = [NSMutableArray array];
     }
     return self;
@@ -56,6 +61,7 @@ static SQRPlayer * instancePlayer;
     }
     
     [self removePlayItemReachEndNotifcation];
+    [self removeAudioSessionNotification];
     
     [self.player pause];
 }
@@ -67,20 +73,55 @@ static SQRPlayer * instancePlayer;
     @try {
         [self.player.currentItem removeObserver:self forKeyPath:kSQRLoadedTimeRangesKeyPath];
     } @catch(NSException *exception) {
-        NSLog(@"[player error]remove observer failed: %@",exception);
+//        LOG_E(@"%@",@"[player error] remove observer failed");
     }
     
 }
 
-- (void)loadAssetValues:(SQRMediaItem *)item {
-    
-    AVPlayerItem * newPlayItem = [AVPlayerItem mc_playerItemWithRemoteURL:item.assetUrl error:nil];
-    
-    __weak AVAsset * weakAsset = newPlayItem.asset;
+-(void)addTimeObserver {
     __weak typeof(self)weakSelf = self;
+    if (!_timeObserver) {
+        _timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+            [weakSelf syncPlayProcess:time];
+        }];
+    }
+}
 
-    [newPlayItem.asset loadValuesAsynchronouslyForKeys:[self.class assetKeysRequiredToPlay] completionHandler:^{
+- (void)removeTimeObserver {
+    if (_timeObserver) {
+        [self.player removeTimeObserver:_timeObserver];
+        _timeObserver = nil;
+    }
+}
+
+- (NSError *)errorWithMesssage:(NSString *)msg code:(NSInteger)errorCode {
+    return [NSError errorWithDomain:@"com.tbreader.alibaba" code:errorCode userInfo:@{@"owner":self}];
+}
+
+#pragma mark - load asset
+
+- (void)loadAssetValues:(SQRMediaItem *)item complete:(void(^)(AVPlayerItem *item, NSError * error))completeHandle {
+    if (_loadingAsset) {
+        [_loadingAsset cancelLoading];
+    }
+    
+    AVPlayerItem * newPlayItem = nil;
+    NSURL * url = item.currentUrl;
+    if ([url isFileURL]) {
+        newPlayItem = [AVPlayerItem playerItemWithURL:url];
+        
+    }else {
+        newPlayItem = [AVPlayerItem mc_playerItemWithRemoteURL:url error:nil];
+    }
+    
+    _loadingAsset = newPlayItem.asset;
+
+    __weak AVAsset * weakAsset = _loadingAsset;
+    __weak typeof(self)weakSelf = self;
+    
+    [_loadingAsset loadValuesAsynchronouslyForKeys:[self.class assetKeysRequiredToPlay] completionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            
             __strong typeof(weakSelf)strongself = weakSelf;
             
             if ([self.delegate respondsToSelector:@selector(mediaPlayerDidEndLoading:media:)]) {
@@ -89,50 +130,36 @@ static SQRPlayer * instancePlayer;
             
             NSArray * allKeys = [self.class assetKeysRequiredToPlay];
             
+            NSError * customeError = nil;
             for (NSString * key in allKeys) {
                 NSError * error = nil;
-                if ([weakAsset statusOfValueForKey:key error:&error] != AVKeyValueStatusLoaded) {
-                    NSLog(@"player error: %@", error);
-                    return;
+                if ([weakAsset statusOfValueForKey:key error:&error] == AVKeyValueStatusFailed) {
+                    LOG_E(@"player error: %@", error);
+                    customeError = error;
+                    break;
                 }
             }
             
             if (!weakAsset.playable || weakAsset.hasProtectedContent) {
-                NSLog(@"player error: %@", @"audio cannot play");
+                LOG_E(@"player error: %@", @"audio cannot play");
+                
+                if (!customeError) {
+                    customeError = [strongself errorWithMesssage:@"url can not to play" code:kMediaPlayerErrorCodeCannotPlay];
+                }
+            }
+            // 递归多个url，寻找可播放url
+            if (customeError && [item retryNext]) {
+                if ([weakSelf.delegate respondsToSelector:@selector(mediaPlayerRetryNext:error:media:)]) {
+                    [weakSelf.delegate mediaPlayerRetryNext:weakSelf error:customeError media:item];
+                }
+                [weakSelf loadAssetValues:item complete:completeHandle];
                 return;
             }
             
-            NSError *error = nil;
-            if (error) {
-                NSLog(@"[sqrplayer error] cache failed");
-                
-                [strongself setCurrentState:SQRMediaPlaybackStateStopped];
-                
-                if ([strongself.delegate respondsToSelector:@selector(mediaPlayerDidFailedWithError:player:media:)]) {
-                    [strongself.delegate mediaPlayerDidFailedWithError:error player:self media:item];
-                }
+            // 回调
+            if (completeHandle) {
+                completeHandle(newPlayItem, customeError);
             }
-            else {
-                // 加载新的asset
-                strongself.player.usesExternalPlaybackWhileExternalScreenIsActive = YES;
-                
-                [strongself.player replaceCurrentItemWithPlayerItem:newPlayItem];
-                [strongself play];
-                
-                [strongself addPlayerItemObservers];
-                [strongself addPlayItemReachEndNotifcation];
-                
-                _timeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-                    [weakSelf syncPlayProcess:time];
-                }];
-                
-                if([strongself.delegate respondsToSelector:@selector(mediaPlayerDidStartPlaying:media:)]) {
-                    [strongself.delegate mediaPlayerDidStartPlaying:strongself media:item];
-                }
-                
-                weakSelf.currentPlayItem = item;
-            }
-            
         });
     }];
    
@@ -146,7 +173,7 @@ static SQRPlayer * instancePlayer;
 
 - (void)removePlayItemAt:(NSUInteger)index {
     if (index+1>self.playItemQueue.count) {
-        NSLog(@"[player error] index is beyond range");
+        LOG_E(@"%@",@"index is beyond range");
         return;
     }
     SQRMediaItem * item = _playItemQueue[index];
@@ -161,7 +188,7 @@ static SQRPlayer * instancePlayer;
 
 - (void)replaceMediaAtIndex:(SQRMediaItem *)media index:(NSInteger)index {
     if (index > self.playItemQueue.count -1) {
-        NSLog(@"[player error] index beyound  queue range");
+        LOG_E(@"%@",@"[player error] index beyound  queue range");
         return;
     }
     SQRMediaItem * item = self.playItemQueue[index];
@@ -192,8 +219,8 @@ static SQRPlayer * instancePlayer;
     [self.playItemQueue removeAllObjects];
 }
 
--(void)playMedia:(SQRMediaItem *)item {
-    _currentPlayItem = item;
+
+- (void)prepareToPlay:(SQRMediaItem *)item complete:(void(^)(AVPlayerItem *avitem, NSError *error))completeHandle {
     [self removePlayerItemObservers];
     [self stop];
     [self.player.currentItem.asset cancelLoading];
@@ -207,14 +234,58 @@ static SQRPlayer * instancePlayer;
     }
     
     _currentPlayItem = item;
-    [self.player removeTimeObserver:_timeObserver];
     [self setCurrentState:SQRMediaPlaybackStateLoading];
     
     if ([self.delegate respondsToSelector:@selector(mediaPlayerWillStartLoading:media:)]) {
         [self.delegate mediaPlayerWillStartLoading:self media:item];
     }
     
-    [self loadAssetValues:item];
+    __weak typeof(self)weakSelf = self;
+    [self loadAssetValues:item complete:^(AVPlayerItem *avitem, NSError *error) {
+        if (error) {
+            [weakSelf setCurrentState:SQRMediaPlaybackStateStopped];
+            [weakSelf.loadingAsset cancelLoading];
+            weakSelf.loadingAsset = nil;
+            
+            if ([weakSelf.delegate respondsToSelector:@selector(mediaPlayerDidFailedWithError:player:media:)]) {
+                [weakSelf.delegate mediaPlayerDidFailedWithError:error player:weakSelf media:item];
+            }
+            
+        }else {
+
+            if ([weakSelf.delegate respondsToSelector:@selector(mediaPlayerDidEndLoading:media:)]) {
+                [weakSelf.delegate mediaPlayerDidEndLoading:weakSelf media:item];
+            }
+            
+            // 加载新的asset
+            weakSelf.player.usesExternalPlaybackWhileExternalScreenIsActive = YES;
+            [weakSelf.player replaceCurrentItemWithPlayerItem:avitem];
+            
+            [weakSelf addPlayerItemObservers];
+            [weakSelf addPlayItemReachEndNotifcation];
+            [weakSelf addTimeObserver];
+            
+            if([weakSelf.delegate respondsToSelector:@selector(mediaPlayerDidStartPlaying:media:)]) {
+                [weakSelf.delegate mediaPlayerDidStartPlaying:weakSelf media:item];
+            }
+            
+            weakSelf.currentPlayItem = item;
+        }
+        if (completeHandle) {
+            completeHandle(avitem,error);
+        }
+    }];
+}
+
+-(void)playMedia:(SQRMediaItem *)item {
+    __weak typeof(self)weakSelf = self;
+
+    [self prepareToPlay:item complete:^(AVPlayerItem *avitem, NSError *error) {
+        if (error) {
+        }else {
+            [weakSelf play];
+        }
+    }];
 }
 
 - (void)playNextItem {
@@ -223,7 +294,7 @@ static SQRPlayer * instancePlayer;
     }
     
     if (self.playItemQueue.count) {
-        if (_playingIndex > self.playItemQueue.count -1) {
+        if (_playingIndex >= self.playItemQueue.count -1) {
             _playingIndex = 0;
         }else {
             _playingIndex++;
@@ -231,7 +302,7 @@ static SQRPlayer * instancePlayer;
         
         [self playMedia:self.playItemQueue[_playingIndex]];
     }else if(_playbackState != SQRMediaPlaybackStatePlaying) {
-        NSLog(@"[player debug]stop. becase player have reach queue end");
+        LOG_I(@"%@",@"stop. becase player have reach queue end");
         [self stop];
     }
 }
@@ -252,9 +323,13 @@ static SQRPlayer * instancePlayer;
     }
 }
 
+- (SQRMediaItem *)currentPlayItem {
+    return _currentPlayItem;
+}
+
 - (void)playMeidaAtIndex:(NSUInteger)index {
     if (index > self.playItemQueue.count-1) {
-        NSLog(@"[player error] play index beyoud range");
+        LOG_E(@"%@",@"[player error] play index beyoud range");
         return;
     }
     _playingIndex = MAX(0, MIN(index, self.playItemQueue.count -1));
@@ -292,13 +367,20 @@ static SQRPlayer * instancePlayer;
     
     [self removePlayItemReachEndNotifcation];
     [self removePlayerItemObservers];
+    [self removeTimeObserver];
     
     [self setCurrentState:SQRMediaPlaybackStateStopped];
 }
 
 -(void)seekTo:(NSTimeInterval)time {
-    [self.player seekToTime:CMTimeMake(time, 1)];
+    __weak typeof(self)weakSelf = self;
+    
+    [self.player seekToTime:CMTimeMake(time, 1) completionHandler:^(BOOL finished) {
+        [weakSelf updatLockScreenInfo];
+    }];
 }
+
+#pragma mark - 
 
 - (void)setCurrentState:(SQRMediaPlaybackState)state {
     if (state == _playbackState) {
@@ -309,6 +391,8 @@ static SQRPlayer * instancePlayer;
         [self.delegate mediaPlayerWillChangeState:state];
     }
     
+    [self removeAudioSessionNotification];
+
     if (state == SQRMediaPlaybackStatePlaying) {
         //  更新锁屏信息
         [self updatLockScreenInfo];
@@ -317,12 +401,19 @@ static SQRPlayer * instancePlayer;
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
         [audioSession setCategory:AVAudioSessionCategoryPlayback error:&error];
         [audioSession setActive:YES error:NULL];
+        
+        [self addAudioSessionNotification];
     }
     
     _playbackState = state;
 }
 
+
 - (void)updatLockScreenInfo {
+    if (self.player.currentItem.status != AVPlayerItemStatusReadyToPlay) {
+        return;
+    }
+    
     NSMutableDictionary * info = [NSMutableDictionary dictionary];
     [info setObject:_currentPlayItem.title ?: @"" forKey:MPMediaItemPropertyTitle];
     [info setObject:@([self currentPlaybackTime]) forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
@@ -337,16 +428,16 @@ static SQRPlayer * instancePlayer;
         coverImg = [self.delegate mediaPlayerArtworkImage:self media:_currentPlayItem];
     }
     if (coverImg) {
-#ifdef __IPHONE_10_0
-        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:CGSizeMake(300, 300) requestHandler:^UIImage * _Nonnull(CGSize size) {
-            return coverImg;
-        }];
-        [info setObject:artwork forKey:MPMediaItemPropertyArtwork];
-#else
-        MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:coverImg];
-        [info setObject:artwork forKey:MPMediaItemPropertyArtwork];
-#endif
-        
+        NSString *version = [UIDevice currentDevice].systemVersion;
+        if (version.doubleValue >= 10.0) {
+            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithBoundsSize:CGSizeMake(300, 300) requestHandler:^UIImage * _Nonnull(CGSize size) {
+                return coverImg;
+            }];
+            [info setObject:artwork forKey:MPMediaItemPropertyArtwork];
+        }else {
+            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:coverImg];
+            [info setObject:artwork forKey:MPMediaItemPropertyArtwork];
+        }
     }
     [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:info];
 }
@@ -375,6 +466,43 @@ static SQRPlayer * instancePlayer;
 
 - (void)removePlayItemReachEndNotifcation {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+}
+
+- (void)addAudioSessionNotification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioSessionInterrupted:) name:AVAudioSessionInterruptionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioSessionChangeRoute:) name:AVAudioSessionRouteChangeNotification object:nil];
+}
+
+- (void)removeAudioSessionNotification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
+}
+
+- (void)audioSessionInterrupted:(NSNotification *)notification {
+    NSNumber *interruptionType = [[notification userInfo] objectForKey:AVAudioSessionInterruptionTypeKey];
+    AVAudioSessionInterruptionType type = interruptionType.unsignedIntegerValue;
+    
+    if ([_delegate respondsToSelector:@selector(mediaPlayerDidInterrupt:interruptState:)]) {
+        [_delegate mediaPlayerDidInterrupt:self interruptState:type];
+    }
+}
+
+- (void)audioSessionChangeRoute:(NSNotification *)notification {
+    NSDictionary *dic=notification.userInfo;
+    int changeReason= [dic[AVAudioSessionRouteChangeReasonKey] intValue];
+    
+    if (changeReason==AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
+        if (![AVAudioSession sharedInstance].currentRoute.outputs) {
+            NSLog(@"切换到扬声器，音乐暂停");
+            [self pause];
+        }
+        if([_delegate respondsToSelector:@selector(mediaPlayerDidChangeAudioRoute:)]) {
+            [_delegate mediaPlayerDidChangeAudioRoute:self];
+        }
+    }
 }
 
 #pragma mark - play info
@@ -417,7 +545,7 @@ static SQRPlayer * instancePlayer;
             }
         });
         
-        NSLog(@"[player] steaming have cache %0.2f",progress);
+//        LOG_I(@"steaming have cache %0.2f",progress);
     }
 }
 
@@ -432,6 +560,6 @@ static SQRPlayer * instancePlayer;
         [self.delegate mediaPlayerDidChangedPlaybackTime:self];
     }
     
-    NSLog(@"[player debug] playback %0.2f / %0.2f", CMTimeGetSeconds(time), CMTimeGetSeconds(self.player.currentItem.duration));
+//    LOG_I(@"[player debug] playback %0.2f / %0.2f", CMTimeGetSeconds(time), CMTimeGetSeconds(self.player.currentItem.duration));
 }
 @end

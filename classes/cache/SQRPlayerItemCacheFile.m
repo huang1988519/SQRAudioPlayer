@@ -1,10 +1,12 @@
 
 //  Created by huanwh on 2017/7/31.
-//  Copyright © 2016年 Chengyin. All rights reserved.
+
 //
 
 #import "SQRPlayerItemCacheFile.h"
 #import "SQRCacheSupportUtils.h"
+#import "SQRMediaPlayer.h"
+
 
 const NSString *MCAVPlayerCacheFileZoneKey = @"zone";
 const NSString *MCAVPlayerCacheFileSizeKey = @"size";
@@ -34,6 +36,7 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
     {
         return nil;
     }
+    NSLog(@"caching path: %@",filePath);
     
     self = [super init];
     if (self)
@@ -223,6 +226,7 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
     {
         [_ranges addObject:[NSValue valueWithRange:range]];
     }
+    
     [self mergeRanges];
     [self checkCompelete];
 }
@@ -366,9 +370,14 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
     }
     @catch (NSException * e)
     {
+        LOG_E(@"[cache]%@",e);
         return NO;
     }
-    [self addRange:NSMakeRange(offset, [data length])];
+    
+    @synchronized (self) {
+        [self addRange:NSMakeRange(offset, [data length])];
+    }
+    
     if (synchronize)
     {
         [self synchronize];

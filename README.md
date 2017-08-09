@@ -15,28 +15,29 @@ _player.delegate = self;
 
 ```
 SQRMediaItem * item = [SQRMediaItem new];
-    item.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group30/M03/6C/8E/wKgJXll58uDQ-lJnABJ__ybdmiw564.m4a"];
+    item.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group8/M08/1C/A3/wKgDYVV3xTizBpzwAEvysDE32Lk219.m4a"]];
     [_player playMedia:item];
 ```
 
 添加队列
 ```
- SQRMediaItem * item1 = [SQRMediaItem new];
-    item1.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group7/M0B/1B/CE/wKgDWlV2iSWwdkEQAEuBnDfPtxw914.m4a"];
-    
-    SQRMediaItem * item2 = [SQRMediaItem new];
-    item2.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group12/M00/1C/AD/wKgDW1V39AfDOSDwAE7IowCHNWQ865.m4a"];
-    
-    SQRMediaItem * item3 = [SQRMediaItem new];
-    item3.assetUrl = [NSURL URLWithString:@"http://audio.xmcdn.com/group11/M03/1D/EF/wKgDbVV5B3bjxcFCAFLbZMLGZbg032.m4a"];
-    
-    [_player setQueue:@[item1,item2,item3]];
+  SQRMediaItem * item1 = [SQRMediaItem new];
+  item1.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group7/M0B/1B/CE/wKgDWlV2iSWwdkEQAEuBnDfPtxw914.m4a"]];
+
+  SQRMediaItem * item2 = [SQRMediaItem new];
+  item2.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group12/M00/1C/AD/wKgDW1V39AfDOSDwAE7IowCHNWQ865.m4a"]];
+
+  SQRMediaItem * item3 = [SQRMediaItem new];
+  item3.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group8/M08/1C/A3/wKgDYVV3xTizBpzwAEvysDE32Lk219.m4a"]];
+
+  SQRMediaItem * item4 = [SQRMediaItem new];
+  item4.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group7/M09/2D/65/wKgDWlWKSmOB3Sd6AFOahV91Rwo643.m4a"]];
 ```
 
 快进
 ```
 if ([_player playbackState] == SQRMediaPlaybackStatePlaying) {
-        
+
         float offset = slider.value * [_player currentPlaybackDuration];
         [_player seekTo:offset];
     }
@@ -74,14 +75,20 @@ if ([_player playbackState] == SQRMediaPlaybackStatePlaying) {
     float progress = [player currentPlaybackTime] / [player currentPlaybackDuration];
     [_slider setValue:progress animated:YES];
 }
+
 /* 播放被终端。 type 为被中断理由*/
 - (void)mediaPlayerDidInterrupt:(SQRPlayer *)player interruptState:(AVAudioSessionInterruptionType)type
 {
 }
+
 /* 播放输出源变化。 切换到外设时音乐继续播放； 切换到手机扬声器时音乐暂停。*/
 - (void)mediaPlayerDidChangeAudioRoute:(SQRPlayer *)player
 {
 }
 
-```
+/* 设置多个源，播放当前源地址 尝试失败*/
+- (void)mediaPlayerRetryNext:(SQRPlayer *)player error:(NSError *)error media:(SQRMediaItem *)item {
+  
+}
 
+```
