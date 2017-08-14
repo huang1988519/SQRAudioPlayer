@@ -16,51 +16,61 @@ typedef NS_ENUM(NSUInteger, AVPlayerMCCacheError)
 @interface AVPlayerItem (SQRCacheSupport)
 
 /**
- *  get original url, do not use [(AVURLAsset *)self.asset URL].
+ *  获取原始url，不要使用 [(AVURLAsset *)self.asset URL].
  */
 @property (nonatomic,copy,readonly) NSURL *mc_URL;
 
 /**
- *  cache file path.
+ *  cache path
  */
 @property (nonatomic,copy,readonly) NSString *mc_cacheFilePath NS_AVAILABLE(10_9, 7_0);
 
 /**
- *  AVPlayerItem with cache support, same to -mc_playerItemWithRemoteURL:URL options:nil error:error
+ *  本地的 AVPlayerItem, 等同  -mc_playerItemWithRemoteURL:URL options:nil error:error
  *
  *  @param URL     original request url
  *
- *  @return AVPlayerItem with cache support
+ *  @return 本地 AVPlayerItem
  */
 + (instancetype)mc_playerItemWithRemoteURL:(NSURL *)URL error:(NSError **)error NS_AVAILABLE(10_9, 7_0);
 
 /**
- *  AVPlayerItem with cache support, same to -mc_playerItemWithRemoteURL:URL options:options cacheFilePath:nil error:error
+ *  生成路由本地的 AVPlayerItem, 等同  -mc_playerItemWithRemoteURL:URL options:options cacheFilePath:nil error:error
  *
  *  @param URL     original request url
- *  @param options An instance of NSDictionary that contains keys for specifying options for the initialization of the AVURLAsset. See AVURLAssetPreferPreciseDurationAndTimingKey and AVURLAssetReferenceRestrictionsKey
+ *  @param options 初始化 AVURLAsset的配置字典 .  AVURLAssetPreferPreciseDurationAndTimingKey and AVURLAssetReferenceRestrictionsKey
  *
- *  @return AVPlayerItem with cache support
+ *  @return 本地 AVPlayerItem
  */
 + (instancetype)mc_playerItemWithRemoteURL:(NSURL *)URL options:(NSDictionary<NSString *, id> *)options error:(NSError **)error NS_AVAILABLE(10_9, 7_0);
 
 /**
- *  create AVPlayerItem with cache support
+ *  生成路由本地的 AVPlayerItem
  *
  *  @param URL           original request url
- *  @param options       An instance of NSDictionary that contains keys for specifying options for the initialization of the AVURLAsset. See AVURLAssetPreferPreciseDurationAndTimingKey and AVURLAssetReferenceRestrictionsKey
+ *  @param options       初始化 AVURLAsset的配置字典 .  AVURLAssetPreferPreciseDurationAndTimingKey and AVURLAssetReferenceRestrictionsKey
  *
- *  @param cacheFilePath cache file path, if cacheFilePath is nil the cache will be put in NSTemporaryDirectory()/AVPlayerMCCache
- *  @param error         nil means success, otherwise failed, input url will not be cached
+ *  @param cacheFilePath 设置缓存路径, 如果设置nil，  则默认 NSTemporaryDirectory()/AVPlayerMCCache
+ *  @param error         nil,没有错误则返回. 失败, 媒体流不被缓存
  *
- *  @return AVPlayerItem with cache support
+ *  @return 本地 AVPlayerItem
  */
 + (instancetype)mc_playerItemWithRemoteURL:(NSURL *)URL options:(NSDictionary<NSString *, id> *)options cacheFilePath:(NSString *)cacheFilePath error:(NSError **)error NS_AVAILABLE(10_9, 7_0);
 
 /**
- *  remove cache file and cache index file
+ *  移除本地缓存文件 和 index 文件
  *
- *  @param cacheFilePath cache file path.
+ *  @param cacheFilePath 缓存文件路径
  */
 + (void)mc_removeCacheWithCacheFilePath:(NSString *)cacheFilePath NS_AVAILABLE(10_9, 7_0);
+
+/**
+ 删除过期数据
+ 
+ @param maxFileCount 设置保留缓存最大个数
+ @param seconds 删除多久之前数据
+ @return 错误信息
+ */
++ (NSError *)removeExpireFiles:(NSInteger)maxFileCount beforeTime:(NSInteger)seconds;
++ (NSError *)removeAllAudioCache;
 @end

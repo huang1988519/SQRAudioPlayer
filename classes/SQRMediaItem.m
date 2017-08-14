@@ -27,7 +27,7 @@
 
 
 - (BOOL)retryNext {
-    if (_retryIndex < _assetUrls.count) {
+    if (_retryIndex < _assetUrls.count -1) {
         _retryIndex++;
         return YES;
     }

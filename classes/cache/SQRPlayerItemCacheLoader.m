@@ -1,7 +1,8 @@
 
 //  Created by huanwh on 2017/7/31.
 
-//
+
+//#define SingleQueue
 
 #import "SQRPlayerItemCacheLoader.h"
 #import "SQRPlayerItemLocalCacheTask.h"
@@ -17,10 +18,11 @@
     NSMutableArray<AVAssetResourceLoadingRequest *> *_pendingRequests;
     AVAssetResourceLoadingRequest *_currentRequest;
     NSRange _currentDataRange;
-    SQRPlayerItemCacheFile *_cacheFile;
     NSHTTPURLResponse *_response;
 }
 @property (nonatomic,strong) NSMutableDictionary * queues;
+@property (atomic   ,strong)SQRPlayerItemCacheFile *cacheFile;
+
 @end
 
 @implementation SQRPlayerItemCacheLoader
@@ -59,11 +61,12 @@
     [[NSFileManager defaultManager] removeItemAtPath:[cacheFilePath stringByAppendingString:[SQRPlayerItemCacheFile indexFileExtension]] error:NULL];
 }
 
-+ (void)removeExpireFiles {
++ (NSError *)removeExpireFiles:(NSInteger)maxFileCount beforeTime:(NSInteger)seconds {
     NSString * dirPath = MCCacheTemporaryDirectory();
     NSDirectoryEnumerator * fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
     
     NSMutableDictionary * validFiles = [NSMutableDictionary dictionary];
+    NSError * lastError = nil;
     for (NSString * fileName in fileEnumerator) {
         NSString * filePath = [dirPath stringByAppendingPathComponent:fileName];
         
@@ -71,48 +74,60 @@
         NSDictionary * attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&error];
         if (error) {
             LOG_I(@"get file attribuation error . %@",error);
-            error = nil;
+            lastError = error;
+            break;
         }
         
         NSDate * lastModifyDate = [attrs objectForKey:NSFileModificationDate];
-        NSDate * oneDayAge      = [NSDate dateWithTimeIntervalSinceNow:-60*60*24];
+        NSDate * oneDayAge      = [NSDate dateWithTimeIntervalSinceNow:-seconds];
         
-        if ([lastModifyDate compare:oneDayAge] == NSOrderedDescending) {
+        error = nil;
+        if (seconds>0 &&[lastModifyDate compare:oneDayAge] == NSOrderedAscending) {
+            // 移除  文件 & idx （成对删除）
             if ([fileName.pathExtension isEqualToString:[SQRPlayerItemCacheFile indexFileExtension]] == false) {
-                [[self class] removeCacheWithCacheFilePath:fileName];
+                [[self class] removeCacheWithCacheFilePath:filePath];
             }else {
+                // 移除 idx 文件
                 [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
                 if (error) {
                     NSLog(@"delete file error. %@",error);
-                    error = nil;
+                    lastError = error;
                 }
             }
         }else {
             [validFiles setObject:filePath forKey:lastModifyDate];
         }
         
-        if (validFiles.count > 10) {
-            NSArray * filterKeys = [validFiles.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSDate *  _Nonnull obj1, NSDate *  _Nonnull obj2) {
-                return [obj1 compare:obj2];
-            }];
-            
-            int i = (int)filterKeys.count - 10;
-            while (i > 0) {
-                NSString * earlyPath = [validFiles objectForKey:filterKeys[i-1]];
-                [[NSFileManager defaultManager] removeItemAtPath:earlyPath error:&error];
-                if (error) {
-                    LOG_E(@" delete file error. %@",error);
-                    error = nil;
-                }
-                
-                [validFiles removeObjectForKey:filterKeys.firstObject];
-                i--;
-            }
-        }
+        error = nil;
     }
+    
+    if (maxFileCount>0 && validFiles.count > maxFileCount) {
+        NSError * error = nil;
+
+        NSArray * filterKeys = [validFiles.allKeys sortedArrayUsingComparator:^NSComparisonResult(NSDate *  _Nonnull obj1, NSDate *  _Nonnull obj2) {
+            return [obj1 compare:obj2];
+        }];
+        
+        NSMutableArray * removeKeys = [NSMutableArray arrayWithArray:filterKeys];
+        int i = (int)filterKeys.count - (int)maxFileCount;
+        while (i > 0) {
+            NSString * earlyPath = [validFiles objectForKey:removeKeys.firstObject];
+            [[NSFileManager defaultManager] removeItemAtPath:earlyPath error:&error];
+            if (error) {
+                LOG_E(@" delete file error. %@",error);
+                lastError = error;
+            }
+            
+            [removeKeys removeObject:removeKeys.firstObject];
+            i--;
+        }
+        error = nil;
+    }
+    
+    return lastError;
 }
 
-+ (void)removeAllAudioCache {
++ (NSError *)removeAllAudioCache {
     NSString * dirPath = MCCacheTemporaryDirectory();
     
     NSError * error = nil;
@@ -120,15 +135,13 @@
     if (error) {
         LOG_E(@"remove audio cache dir failed",nil);
     }
+    return error;
 }
 
 
 - (void)dealloc
 {
-    for (NSOperationQueue * queue in _queues.allValues) {
-        [queue cancelAllOperations];
-        [queue.operations makeObjectsPerformSelector:@selector(cancel)];
-    }
+    [self cancelAllQueue];
 }
 
 #pragma mark - loading request
@@ -181,6 +194,7 @@
         NSInteger statusCode = supportRange ? 206 : 200;
         _response = [[NSHTTPURLResponse alloc] initWithURL:_currentRequest.request.URL statusCode:statusCode HTTPVersion:@"HTTP/1.1" headerFields:responseHeaders];
         [_currentRequest mc_fillContentInformation:_response];
+
     }
     [self startCurrentRequest];
 }
@@ -233,7 +247,9 @@
 
 - (void)completeRequest:(AVAssetResourceLoadingRequest *)loadingRequest task:(NSError *)error {
     if (error) {
-        [loadingRequest finishLoadingWithError:error];
+        if (![loadingRequest isFinished]) {
+            [loadingRequest finishLoadingWithError:error];
+        }
     }else {
         if (![loadingRequest isFinished]) {
             [loadingRequest finishLoading];
@@ -257,13 +273,13 @@
     if (cached)
     {
         task = [[SQRPlayerItemLocalCacheTask alloc] initWithCacheFile:_cacheFile loadingRequest:_currentRequest range:range];
-        LOG_I(@"添加 本地 队列  %@  \n at queue %@ \n",NSStringFromRange(range),queue.name);
+        LOG_I(@"add local queue:  %@  \n at queue %@ \n",NSStringFromRange(range),queue.name);
     }
     else
     {
         task = [[SQRPlayerItemRemoteCacheTask alloc] initWithCacheFile:_cacheFile loadingRequest:_currentRequest range:range];
         [(SQRPlayerItemRemoteCacheTask *)task setResponse:_response];
-        LOG_I(@"添加 远程 队列  %@ \n at queue %@ \n,",NSStringFromRange(range),queue.name);
+        LOG_I(@"add remote queue:  %@ \n at queue %@ \n,",NSStringFromRange(range),queue.name);
     }
     __weak typeof(self)weakSelf = self;
     task.finishBlock = ^(SQRPlayerItemCacheTask *task, NSError *error)
@@ -286,26 +302,34 @@
     };
     [queue addOperation:task];
     
-    LOG_I(@"当前队列 %lu / %lu",queue.operationCount,_queues.count);
+    LOG_I(@"current  queue:  %lu / %lu",queue.operationCount,_queues.count);
 }
 
 #pragma mark - tasks 
 
 - (NSString *)keyForLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
     NSString * url      = loadingRequest.request.URL.absoluteString;
-    NSString * range    = [NSString stringWithFormat:@"?range=%lld-%ld",loadingRequest.dataRequest.requestedOffset,loadingRequest.dataRequest.requestedLength];
+    NSString * range    = [NSString stringWithFormat:@"?range=%lli-%lu",loadingRequest.dataRequest.requestedOffset,(long int)loadingRequest.dataRequest.requestedLength];
     
+#ifdef SingleQueue
+    return @"custom queue";
+#endif
     return [url stringByAppendingString:range];
 }
 
 - (void)addTaskQueue:(AVAssetResourceLoadingRequest *)loadingRequest {
+#ifdef SingleQueue
+    if (_queues[[self keyForLoadingRequest:loadingRequest]]) {
+        return;
+    }
+#endif
     NSOperationQueue * queue = [[NSOperationQueue alloc] init];
     queue.maxConcurrentOperationCount = 1;
     queue.name = [self keyForLoadingRequest:loadingRequest];
     
     _queues[[self keyForLoadingRequest:loadingRequest]] = queue;
     
-    LOG_I(@"创建队列 %@",queue.name);
+    LOG_I(@"create new queue:  %@",queue.name);
 }
 
 - (void)removeTaskQueue:(AVAssetResourceLoadingRequest *)loadingRequest {
@@ -317,16 +341,20 @@
     
     [_queues removeObjectForKey:[self keyForLoadingRequest:loadingRequest]];
     
-    LOG_I(@"移除 队列 %@",queue.name);
+    LOG_I(@"remove queue:  %@",queue.name);
+}
+
+- (void)cancelAllQueue {
+    for (NSOperationQueue * queue in _queues.allValues) {
+        [queue cancelAllOperations];
+        [queue.operations makeObjectsPerformSelector:@selector(cancel)];
+    }
+    [_queues removeAllObjects];
 }
 
 #pragma mark - resource loader delegate
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest
 {
-    if ([[[loadingRequest request] URL] isFileURL]) {
-        return NO;
-    }
-    
     [_pendingRequests addObject:loadingRequest];
     [self addTaskQueue:loadingRequest];
     [self startNextRequest];
@@ -336,6 +364,9 @@
 
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
 {
+    
+    LOG_I(@"cancel play loadingRequest:   < Offset = %lld, currentOffset = %lld, Length = %ld >", loadingRequest.dataRequest.requestedOffset, loadingRequest.dataRequest.currentOffset, loadingRequest.dataRequest.requestedLength);
+
     [_pendingRequests removeObject:loadingRequest];
     [self removeTaskQueue:loadingRequest];
     

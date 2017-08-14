@@ -165,6 +165,9 @@ const NSRange MCInvalidRange = {NSNotFound,0};
     }
     
     NSString *mimeType = [response MIMEType];
+    if (!mimeType) {
+        mimeType = @"audio/x-m4a";
+    }
     CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(mimeType), NULL);
     self.contentInformationRequest.byteRangeAccessSupported = [response mc_supportRange];
     self.contentInformationRequest.contentType = CFBridgingRelease(contentType);

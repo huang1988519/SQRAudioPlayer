@@ -22,6 +22,8 @@
 		D92806F01F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E51F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m */; };
 		D92806F11F31FD39000F8E53 /* SQRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E71F31FD39000F8E53 /* SQRMediaItem.m */; };
 		D92806F21F31FD39000F8E53 /* SQRPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E91F31FD39000F8E53 /* SQRPlayer.m */; };
+		D98984061F41CEF100C24A07 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D98984051F41CEF100C24A07 /* 1.m4a */; };
+		D98984091F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D98984071F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +56,9 @@
 		D92806E81F31FD39000F8E53 /* SQRPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayer.h; sourceTree = "<group>"; };
 		D92806E91F31FD39000F8E53 /* SQRPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayer.m; sourceTree = "<group>"; };
 		D92806F31F342000000F8E53 /* SQRMediaPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRMediaPlayer.h; sourceTree = "<group>"; };
+		D98984051F41CEF100C24A07 /* 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1.m4a; sourceTree = "<group>"; };
+		D98984071F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerHandlerFactory.m; sourceTree = "<group>"; };
+		D98984081F41CF4E00C24A07 /* SQRPlayerHandlerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerHandlerFactory.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +108,7 @@
 		D92806BF1F31FD29000F8E53 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D98984051F41CEF100C24A07 /* 1.m4a */,
 				D92806C01F31FD29000F8E53 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -139,6 +145,8 @@
 				D92806E31F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.m */,
 				D92806E41F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.h */,
 				D92806E51F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m */,
+				D98984071F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m */,
+				D98984081F41CF4E00C24A07 /* SQRPlayerHandlerFactory.h */,
 			);
 			path = cache;
 			sourceTree = "<group>";
@@ -203,6 +211,7 @@
 			files = (
 				D92806CF1F31FD29000F8E53 /* LaunchScreen.storyboard in Resources */,
 				D92806CC1F31FD29000F8E53 /* Assets.xcassets in Resources */,
+				D98984061F41CEF100C24A07 /* 1.m4a in Resources */,
 				D92806CA1F31FD29000F8E53 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,6 +225,7 @@
 			files = (
 				D92806EB1F31FD39000F8E53 /* SQRCacheSupportUtils.m in Sources */,
 				D92806ED1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.m in Sources */,
+				D98984091F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m in Sources */,
 				D92806C71F31FD29000F8E53 /* ViewController.m in Sources */,
 				D92806C41F31FD29000F8E53 /* AppDelegate.m in Sources */,
 				D92806EF1F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.m in Sources */,

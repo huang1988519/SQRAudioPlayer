@@ -89,9 +89,13 @@ static const void * const kAVPlayerItemMCCacheSupportCacheLoaderKey = &kAVPlayer
         }
         return [self playerItemWithURL:URL];
     }
+    
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[URL mc_avplayerCacheSupportURL] options:options];
     [asset.resourceLoader setDelegate:cacheLoader queue:dispatch_get_main_queue()];
     AVPlayerItem *item = [self playerItemWithAsset:asset];
+    if ([item respondsToSelector:@selector(setCanUseNetworkResourcesForLiveStreamingWhilePaused:)]) {
+        item.canUseNetworkResourcesForLiveStreamingWhilePaused =  YES;
+    }
     objc_setAssociatedObject(item, kAVPlayerItemMCCacheSupportCacheLoaderKey, cacheLoader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return item;
 }
@@ -101,6 +105,13 @@ static const void * const kAVPlayerItemMCCacheSupportCacheLoaderKey = &kAVPlayer
     [SQRPlayerItemCacheLoader removeCacheWithCacheFilePath:cacheFilePath];
 }
 
++ (NSError *)removeExpireFiles:(NSInteger)maxFileCount beforeTime:(NSInteger)seconds {
+    return [SQRPlayerItemCacheLoader removeExpireFiles:maxFileCount beforeTime:seconds];
+}
+
++ (NSError *)removeAllAudioCache {
+    return [SQRPlayerItemCacheLoader removeAllAudioCache];
+}
 #pragma mark - property
 - (SQRPlayerItemCacheLoader *)mc_cacheLoader
 {

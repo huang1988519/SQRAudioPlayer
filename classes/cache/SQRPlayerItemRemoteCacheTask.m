@@ -1,4 +1,4 @@
-//
+ //
 //  Created by huanwh on 2017/7/31.
 
 //
@@ -7,6 +7,7 @@
 #import "SQRPlayerItemCacheFile.h"
 #import "SQRCacheSupportUtils.h"
 #import "SQRMediaPlayer.h"
+#import "SQRPlayerHandlerFactory.h"
 
 
 @interface SQRPlayerItemRemoteCacheTask ()<NSURLConnectionDataDelegate>
@@ -25,14 +26,12 @@
 
 @property (assign, nonatomic, getter = isExecuting) BOOL executing;
 @property (assign, nonatomic, getter = isFinished) BOOL finished;
-//@property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
 
 @end
 
 @implementation SQRPlayerItemRemoteCacheTask
 @synthesize executing = _executing;
 @synthesize finished = _finished;
-//@synthesize cancelled = _cancelled;
 
 - (void)main
 {
@@ -46,7 +45,9 @@
         
         [self setFinished:NO];
         [self setExecuting:YES];
-        [self startURLRequestWithRequest:_loadingRequest range:_range];
+        if ([self allowAccessNetwork]) {
+            [self startURLRequestWithRequest:_loadingRequest range:_range];
+        }
         [self handleFinished];
     }
 }
@@ -54,13 +55,14 @@
 - (void)handleFinished
 {
     if (!_loadingRequest) {
-        LOG_I(@"远程请求持有请求 被释放",nil);
+        LOG_I(@"remote loadingRequest = nil",nil);
     }
     if (self.finishBlock && _loadingRequest)
     {
-        LOG_I(@"远程请求回调",nil);
+        LOG_I(@"remote task finish ",nil);
         self.finishBlock(self,_error);
     }
+    
     [self setExecuting:NO];
     [self setFinished:YES];
 }
@@ -72,10 +74,12 @@
 }
 
 - (void)startURLRequestWithRequest:(AVAssetResourceLoadingRequest *)loadingRequest range:(NSRange)range
-{
+{    
     NSMutableURLRequest *urlRequest = [loadingRequest.request mutableCopy];
     urlRequest.URL = [loadingRequest.request.URL mc_avplayerOriginalURL];
     urlRequest.cachePolicy = NSURLRequestReloadIgnoringCacheData;
+    urlRequest.timeoutInterval = 20;
+    
     _offset = 0;
     _requestLength = 0;
     if (!(_response && ![_response mc_supportRange]))
@@ -115,6 +119,20 @@
         CFRunLoopStop(_runloop);
     }
 }
+#pragma mark - network state
+
+-(BOOL)allowAccessNetwork {
+    id<SQRPlayerNetworkChangedProtocol>handler = [SQRPlayerHandlerFactory hanlerForProtocol:@protocol(SQRPlayerNetworkChangedProtocol)];
+    if ([handler respondsToSelector:@selector(mediaPlayerCanUseNetwork:)]) {
+        BOOL allowd = [handler mediaPlayerCanUseNetwork:[_loadingRequest.request.URL mc_avplayerOriginalURL]];
+        if (!allowd) {
+            _error = sqr_errorWithCode(KMediaPlayerErrorCodeNotAllowNetwork, @"not allowd access network!");
+            return NO;
+        }
+    }
+    return YES;
+}
+
 
 #pragma mark - handle connection
 - (nullable NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(nullable NSURLResponse *)response
@@ -152,22 +170,18 @@
 {
     if (data.bytes && data.length<=2) {
         _dataSaved = YES;
-        _offset += [data length];
-        
-        [_loadingRequest.dataRequest respondWithData:data];
     }
     else if (data.bytes && [_cacheFile saveData:data atOffset:_offset synchronize:NO])
     {
         _dataSaved = YES;
         _offset += [data length];
-        
         [_loadingRequest.dataRequest respondWithData:data];
     }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    LOG_I(@"远程请求完成",nil);
+    LOG_I(@"remote request finish",nil);
 
     [self synchronizeCacheFileIfNeeded];
     [self stopRunLoop];

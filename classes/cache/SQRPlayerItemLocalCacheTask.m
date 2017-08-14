@@ -26,6 +26,7 @@
     {
         if ([self isCancelled])
         {
+            LOG_I(@"本地任务被取消",nil);
             [self handleFinished];
             return;
         }
@@ -39,18 +40,17 @@
         {
             if ([self isCancelled])
             {
-                LOG_I(@"本地任务被中断",nil);
+                LOG_I(@"local task cenceled!",nil);
                 break;
             }
             if (!_loadingRequest) {
-                LOG_I(@"本地指向请求 被释放",nil);
+                LOG_I(@"local task -> _loadingRequest = nil",nil);
                 break;
             }
             @autoreleasepool
             {
                 NSRange range = NSMakeRange(offset, MIN(NSMaxRange(_range) - offset,lengthPerRead));
                 NSData *data = [_cacheFile dataWithRange:range];
-                
                 [_loadingRequest.dataRequest respondWithData:data];
 
                 offset = NSMaxRange(range);
@@ -64,7 +64,7 @@
 
 - (void)handleFinished
 {
-    LOG_I(@"本地数据 读取结束. 范围 %@",NSStringFromRange(_range));
+    LOG_I(@"local data finish: range %@",NSStringFromRange(_range));
     
     if (self.finishBlock && _loadingRequest)
     {

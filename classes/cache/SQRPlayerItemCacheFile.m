@@ -1,7 +1,6 @@
 
 //  Created by huanwh on 2017/7/31.
 
-//
 
 #import "SQRPlayerItemCacheFile.h"
 #import "SQRCacheSupportUtils.h"
@@ -12,6 +11,9 @@ const NSString *MCAVPlayerCacheFileZoneKey = @"zone";
 const NSString *MCAVPlayerCacheFileSizeKey = @"size";
 const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
 
+/// 接受数据达到上限之后强制保存进度.
+const NSUInteger kForceSynchronousMaxCount = 20;
+
 @interface SQRPlayerItemCacheFile ()
 {
 @private
@@ -19,6 +21,8 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
     NSFileHandle *_writeFileHandle;
     NSFileHandle *_readFileHandle;
     BOOL _compelete;
+    /// 接受数据达到上限之后强制保存进度.default is 10
+    NSUInteger _recieveMaxCount;
 }
 @end
 
@@ -69,6 +73,7 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
         _ranges = [[NSMutableArray alloc] init];
         _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
         _writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
+        _recieveMaxCount = 0;
         
         NSString *indexStr = [NSString stringWithContentsOfFile:_indexFilePath encoding:NSUTF8StringEncoding error:nil];
         NSData *data = [indexStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -151,8 +156,11 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
 
 - (BOOL)synchronize
 {
-    NSString *indexStr = [self unserializeIndex];
-    return [indexStr writeToFile:_indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    @synchronized (self) {
+        _recieveMaxCount = 0;
+        NSString *indexStr = [self unserializeIndex];
+        return [indexStr writeToFile:_indexFilePath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    }
 }
 
 #pragma mark - property
@@ -234,6 +242,7 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
 - (NSRange)cachedRangeForRange:(NSRange)range
 {
     NSRange cachedRange = [self cachedRangeContainsPosition:range.location];
+    // 获取相同区域
     NSRange ret = NSIntersectionRange(cachedRange, range);
     if (ret.length > 0)
     {
@@ -247,20 +256,22 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
 
 - (NSRange)cachedRangeContainsPosition:(NSUInteger)pos
 {
-    if (pos >= _fileLength)
-    {
+    @synchronized (self) {
+        if (pos >= _fileLength)
+        {
+            return MCInvalidRange;
+        }
+        
+        for (int i = 0; i < _ranges.count; ++i)
+        {
+            NSRange range = [_ranges[i] rangeValue];
+            if (NSLocationInRange(pos, range))
+            {
+                return range;
+            }
+        }
         return MCInvalidRange;
     }
-    
-    for (int i = 0; i < _ranges.count; ++i)
-    {
-        NSRange range = [_ranges[i] rangeValue];
-        if (NSLocationInRange(pos, range))
-        {
-            return range;
-        }
-    }
-    return MCInvalidRange;
 }
 
 - (NSRange)firstNotCachedRangeFromPosition:(NSUInteger)pos
@@ -358,6 +369,8 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
 
 - (BOOL)saveData:(NSData *)data atOffset:(NSUInteger)offset synchronize:(BOOL)synchronize
 {
+    _recieveMaxCount++;
+    
     if (!_writeFileHandle)
     {
         return NO;
@@ -376,11 +389,10 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
     
     @synchronized (self) {
         [self addRange:NSMakeRange(offset, [data length])];
-    }
-    
-    if (synchronize)
-    {
-        [self synchronize];
+        if (synchronize || _recieveMaxCount>kForceSynchronousMaxCount)
+        {
+            [self synchronize];
+        }
     }
     
     return YES;
