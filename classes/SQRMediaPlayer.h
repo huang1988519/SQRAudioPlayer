@@ -22,8 +22,8 @@ fmt]
 
 #else
 
-#define LOG_I(fmt,...) NSLog(INFO_FMT(fmt),##__VA_ARGS__)
-#define LOG_E(fmt,...) NSLog(ERROR_FMT(fmt),##__VA_ARGS__)
+#define LOG_I(fmt,...)
+#define LOG_E(fmt,...) 
 
 #endif
 
