@@ -57,4 +57,9 @@
     _executing = executing;
     [self didChangeValueForKey:@"isExecuting"];
 }
+
+- (void)sqr_cancel {
+    
+}
+
 @end

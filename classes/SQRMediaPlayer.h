@@ -8,7 +8,9 @@
 
 #ifdef SQRPlayer_LOG
 
+#ifndef NSLog
 #define NSLog(FORMAT, ...) fprintf(stderr,"-- %s:%d\n\t%s\n\n",[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
+#endif
 
 #define INFO_FMT(fmt) [NSString stringWithFormat:@"[PLAYER INFO]%@", \
 fmt]
@@ -23,15 +25,25 @@ fmt]
 #else
 
 #define LOG_I(fmt,...)
-#define LOG_E(fmt,...) 
+#define LOG_E(fmt,...)
 
 #endif
+
+//#define SQRPlayerTestSuspended
+
+
+///关闭所有正在请求的 播放器请求
+FOUNDATION_EXPORT NSString * const SQRCancelOrResumeAllRequestNotification;
+///远程地址返回reponse 不是音频格式
+FOUNDATION_EXPORT NSString * const SQRRemoteResponseIsNotAudioNotification;
 
 
 #define kMediaPlayerErrorCodeCannotPlay -1111800        // 源不能播放
 #define kMediaPlayerErrorCodePlayerTimeOut -1111801     // 播放器超时
 #define KMediaPlayerErrorCodeNotAllowNetwork -1111802   // 禁止访问网络
 #define KMediaPlayerErrorCodeTaskCanceled -1111803      // 任务被取消
+#define KMediaPlayerErrorCodeResourceTypeError -1111804 // 资源文件类型错误
+#define KMediaPlayerErrorCodeLackParamsError -1111805   // 缺少必要的配置信息
 
 #import "SQRPlayer.h"
 #import "SQRMediaItem.h"

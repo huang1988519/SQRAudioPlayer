@@ -7,6 +7,7 @@
 //
 
 #import "SQRMediaItem.h"
+#import "SQRMediaPlayer.h"
 
 @interface SQRMediaItem ()
 {
@@ -25,6 +26,9 @@
     return self;
 }
 
+-(void)dealloc {
+    LOG_I(@"释放 SQRMediaItem",nil);
+}
 
 - (BOOL)retryNext {
     if (_retryIndex < _assetUrls.count -1) {

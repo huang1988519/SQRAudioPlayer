@@ -40,18 +40,18 @@
         {
             if ([self isCancelled])
             {
-                LOG_I(@"local task cenceled!",nil);
+                LOG_I(@"本地任务被取消!",nil);
                 break;
             }
-            if (!_loadingRequest) {
-                LOG_I(@"local task -> _loadingRequest = nil",nil);
+            if (!self.loadingRequest) {
+                LOG_I(@"本地任务 -请求被释放",nil);
                 break;
             }
             @autoreleasepool
             {
                 NSRange range = NSMakeRange(offset, MIN(NSMaxRange(_range) - offset,lengthPerRead));
                 NSData *data = [_cacheFile dataWithRange:range];
-                [_loadingRequest.dataRequest respondWithData:data];
+                [self.loadingRequest.dataRequest respondWithData:data];
 
                 offset = NSMaxRange(range);
                 
@@ -64,9 +64,9 @@
 
 - (void)handleFinished
 {
-    LOG_I(@"local data finish: range %@",NSStringFromRange(_range));
+    LOG_I(@"本地缓存读取完毕 range %@",NSStringFromRange(_range));
     
-    if (self.finishBlock && _loadingRequest)
+    if (self.finishBlock && self.loadingRequest)
     {
         self.finishBlock(self,nil);
     }
@@ -87,5 +87,9 @@
     [self willChangeValueForKey:@"isExecuting"];
     _executing = executing;
     [self didChangeValueForKey:@"isExecuting"];
+}
+
+-(void)dealloc {
+    LOG_I(@"释放 SQRPlayerItemLocalCacheTask",nil);
 }
 @end

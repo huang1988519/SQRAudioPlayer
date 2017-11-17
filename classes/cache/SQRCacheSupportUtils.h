@@ -72,7 +72,9 @@ NS_INLINE NSString* MCRangeToHTTPRangeReponseHeader(NSRange range,NSUInteger len
 
 NS_INLINE NSString *MCCacheTemporaryDirectory()
 {
-    return [NSTemporaryDirectory() stringByAppendingPathComponent:MCCacheSubDirectoryName];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cachesDir = [paths objectAtIndex:0];
+    return [cachesDir stringByAppendingPathComponent:MCCacheSubDirectoryName];
 }
 
 NS_INLINE NSString *MCCacheDocumentyDirectory()

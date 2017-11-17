@@ -13,7 +13,6 @@ typedef void (^SQRPlayerItemCacheTaskFinishedBlock)(SQRPlayerItemCacheTask *task
 @interface SQRPlayerItemCacheTask : NSOperation
 {
 @protected
-    __weak AVAssetResourceLoadingRequest *_loadingRequest;
     NSRange _range;
     SQRPlayerItemCacheFile *_cacheFile;
 }
@@ -21,4 +20,6 @@ typedef void (^SQRPlayerItemCacheTaskFinishedBlock)(SQRPlayerItemCacheTask *task
 @property (nonatomic,copy) SQRPlayerItemCacheTaskFinishedBlock finishBlock;
 @property (nonatomic,weak) AVAssetResourceLoadingRequest *loadingRequest;
 - (instancetype)initWithCacheFile:(SQRPlayerItemCacheFile *)cacheFile loadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest range:(NSRange)range;
+
+- (void)sqr_cancel;
 @end

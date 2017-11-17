@@ -15,7 +15,7 @@
 - (instancetype)initWithCacheFilePath:(NSString *)cacheFilePath;
 + (void)removeCacheWithCacheFilePath:(NSString *)cacheFilePath;
 
-
+- (void)clear;
 /**
  删除过期数据
 

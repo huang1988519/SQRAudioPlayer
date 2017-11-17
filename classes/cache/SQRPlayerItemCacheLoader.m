@@ -2,7 +2,11 @@
 //  Created by huanwh on 2017/7/31.
 
 
-//#define SingleQueue
+/**
+ * 控制加载缓存时所在 队列为 唯一队列
+ * no define 则 每次播放器发送请求时都会创建单独的队列处理请求
+ */
+#define SingleQueue
 
 #import "SQRPlayerItemCacheLoader.h"
 #import "SQRPlayerItemLocalCacheTask.h"
@@ -21,13 +25,20 @@
     NSHTTPURLResponse *_response;
 }
 @property (nonatomic,strong) NSMutableDictionary * queues;
-@property (atomic   ,strong)SQRPlayerItemCacheFile *cacheFile;
-
+@property (atomic   ,strong) SQRPlayerItemCacheFile *cacheFile;
+#ifdef SingleQueue
+@property (nonatomic,strong) NSOperationQueue *singleQueue;
+#endif
 @end
 
 @implementation SQRPlayerItemCacheLoader
 
+#pragma mark - create load cache thread
+
+
+
 #pragma mark - init & dealloc
+
 + (instancetype)cacheLoaderWithCacheFilePath:(NSString *)cacheFilePath
 {
     return [[self alloc] initWithCacheFilePath:cacheFilePath];
@@ -38,21 +49,39 @@
     self = [super init];
     if (self)
     {
-        _cacheFile = [SQRPlayerItemCacheFile cacheFileWithFilePath:cacheFilePath];
-        if (!_cacheFile)
+        self.cacheFile = [SQRPlayerItemCacheFile cacheFileWithFilePath:cacheFilePath];
+        if (!self.cacheFile)
         {
             return nil;
         }
+        
         _queues          = [NSMutableDictionary dictionary];
         _pendingRequests = [[NSMutableArray alloc] init];
         _currentDataRange = MCInvalidRange;
+        
+#ifdef SingleQueue
+        _singleQueue = [[NSOperationQueue alloc] init];
+        _singleQueue.name = @"singleQueue";
+        _singleQueue.maxConcurrentOperationCount = 1;
+#endif
     }
     return self;
 }
 
+- (void)dealloc
+{
+    // queue
+    [self cancelAllQueue];
+    _queues = nil;
+}
+
+- (void)clear {
+    [self cancelAllQueue];
+}
+
 - (NSString *)cacheFilePath
 {
-    return _cacheFile.cacheFilePath;
+    return self.cacheFile.cacheFilePath;
 }
 
 + (void)removeCacheWithCacheFilePath:(NSString *)cacheFilePath
@@ -82,20 +111,16 @@
         NSDate * oneDayAge      = [NSDate dateWithTimeIntervalSinceNow:-seconds];
         
         error = nil;
-        if (seconds>0 &&[lastModifyDate compare:oneDayAge] == NSOrderedAscending) {
+        // 过期文件
+        if (lastModifyDate && [lastModifyDate compare:oneDayAge] == NSOrderedAscending) {
             // 移除  文件 & idx （成对删除）
-            if ([fileName.pathExtension isEqualToString:[SQRPlayerItemCacheFile indexFileExtension]] == false) {
-                [[self class] removeCacheWithCacheFilePath:filePath];
-            }else {
-                // 移除 idx 文件
-                [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
-                if (error) {
-                    NSLog(@"delete file error. %@",error);
-                    lastError = error;
-                }
-            }
+            [[self class] removeCacheWithCacheFilePath:filePath];
         }else {
-            [validFiles setObject:filePath forKey:lastModifyDate];
+            // 过滤 idx 文件
+            if (![fileName containsString:[SQRPlayerItemCacheFile indexFileExtension]]) {
+                NSString * key = [NSString stringWithFormat:@"%f%@",lastModifyDate.timeIntervalSince1970,fileName];
+                [validFiles setObject:filePath forKey:key];
+            }
         }
         
         error = nil;
@@ -112,13 +137,10 @@
         int i = (int)filterKeys.count - (int)maxFileCount;
         while (i > 0) {
             NSString * earlyPath = [validFiles objectForKey:removeKeys.firstObject];
-            [[NSFileManager defaultManager] removeItemAtPath:earlyPath error:&error];
-            if (error) {
-                LOG_E(@" delete file error. %@",error);
-                lastError = error;
-            }
-            
+            [[self class] removeCacheWithCacheFilePath:earlyPath];
             [removeKeys removeObject:removeKeys.firstObject];
+            
+            LOG_I(@"remove caching file at path: \n%@\n",earlyPath);
             i--;
         }
         error = nil;
@@ -138,12 +160,6 @@
     return error;
 }
 
-
-- (void)dealloc
-{
-    [self cancelAllQueue];
-}
-
 #pragma mark - loading request
 - (void)startNextRequest
 {
@@ -155,35 +171,24 @@
     _currentRequest = [_pendingRequests lastObject];
     
     LOG_I(@"播放器  %lld -  %ld", _currentRequest.dataRequest.requestedOffset,_currentRequest.dataRequest.requestedLength);
-    /*
-    //data range
-    if ([_currentRequest.dataRequest respondsToSelector:@selector(requestsAllDataToEndOfResource)] && _currentRequest.dataRequest.requestsAllDataToEndOfResource)
-    {
-        _currentDataRange = NSMakeRange((NSUInteger)_currentRequest.dataRequest.requestedOffset, NSUIntegerMax);
-    }
-    else
-    {
-        _currentDataRange = NSMakeRange((NSUInteger)_currentRequest.dataRequest.requestedOffset, _currentRequest.dataRequest.requestedLength);
-    }
-     */
     
     // 去除设置最大值，从网络获取的逻辑
     _currentDataRange = NSMakeRange((NSUInteger)_currentRequest.dataRequest.requestedOffset, _currentRequest.dataRequest.requestedLength);
     
     //response
-    if (!_response && _cacheFile.responseHeaders.count > 0)
+    if (!_response && self.cacheFile.responseHeaders.count > 0)
     {
         if (_currentDataRange.length == NSUIntegerMax)
         {
-            _currentDataRange.length = [_cacheFile fileLength] - _currentDataRange.location;
+            _currentDataRange.length = [self.cacheFile fileLength] - _currentDataRange.location;
         }
         
-        NSMutableDictionary *responseHeaders = [_cacheFile.responseHeaders mutableCopy];
+        NSMutableDictionary *responseHeaders = [self.cacheFile.responseHeaders mutableCopy];
         NSString *contentRangeKey = @"Content-Range";
         BOOL supportRange = responseHeaders[contentRangeKey] != nil;
         if (supportRange && MCValidByteRange(_currentDataRange))
         {
-            responseHeaders[contentRangeKey] = MCRangeToHTTPRangeReponseHeader(_currentDataRange, [_cacheFile fileLength]);
+            responseHeaders[contentRangeKey] = MCRangeToHTTPRangeReponseHeader(_currentDataRange, [self.cacheFile fileLength]);
         }
         else
         {
@@ -201,8 +206,9 @@
 
 - (void)startCurrentRequest
 {
-    NSOperationQueue * queue = self.queues[_currentRequest.request.URL.absoluteString];
+    NSOperationQueue * queue = [self queueForRequest:_currentRequest];
     queue.suspended = YES;
+    
     if (_currentDataRange.length == NSUIntegerMax)
     {
         [self addTaskWithRange:NSMakeRange(_currentDataRange.location, NSUIntegerMax) cached:NO];
@@ -214,10 +220,10 @@
         NSUInteger end = NSMaxRange(_currentDataRange);
         while (start < end)
         {
-            NSRange firstNotCachedRange = [_cacheFile firstNotCachedRangeFromPosition:start];
+            NSRange firstNotCachedRange = [self.cacheFile firstNotCachedRangeFromPosition:start];
             if (!MCValidFileRange(firstNotCachedRange))
             {
-                [self addTaskWithRange:NSMakeRange(start, end - start) cached:_cacheFile.cachedDataBound > 0];
+                [self addTaskWithRange:NSMakeRange(start, end - start) cached:self.cacheFile.cachedDataBound > 0];
                 start = end;
             }
             else if (firstNotCachedRange.location >= end)
@@ -249,12 +255,16 @@
     if (error) {
         if (![loadingRequest isFinished]) {
             [loadingRequest finishLoadingWithError:error];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:SQRRemoteResponseIsNotAudioNotification object:self userInfo:@{AVPlayerItemFailedToPlayToEndTimeErrorKey:error}];
         }
     }else {
         if (![loadingRequest isFinished]) {
             [loadingRequest finishLoading];
         }
     }
+    
+    [self removeTaskQueue:loadingRequest];
 }
 
 - (void)cleanUpCurrentRequest
@@ -267,19 +277,19 @@
 
 - (void)addTaskWithRange:(NSRange)range cached:(BOOL)cached
 {
-    NSOperationQueue * queue = self.queues[[self keyForLoadingRequest:_currentRequest]];
+    NSOperationQueue * queue = [self queueForRequest:_currentRequest];
 
     SQRPlayerItemCacheTask *task = nil;
     if (cached)
     {
-        task = [[SQRPlayerItemLocalCacheTask alloc] initWithCacheFile:_cacheFile loadingRequest:_currentRequest range:range];
-        LOG_I(@"add local queue:  %@  \n at queue %@ \n",NSStringFromRange(range),queue.name);
+        task = [[SQRPlayerItemLocalCacheTask alloc] initWithCacheFile:self.cacheFile loadingRequest:_currentRequest range:range];
+        LOG_I(@"本地任务:  %@ - %@ \n",NSStringFromRange(range),queue.name);
     }
     else
     {
-        task = [[SQRPlayerItemRemoteCacheTask alloc] initWithCacheFile:_cacheFile loadingRequest:_currentRequest range:range];
+        task = [[SQRPlayerItemRemoteCacheTask alloc] initWithCacheFile:self.cacheFile loadingRequest:_currentRequest range:range];
         [(SQRPlayerItemRemoteCacheTask *)task setResponse:_response];
-        LOG_I(@"add remote queue:  %@ \n at queue %@ \n,",NSStringFromRange(range),queue.name);
+        LOG_I(@"远程任务:  %@ - %@ \n,",NSStringFromRange(range),queue.name);
     }
     __weak typeof(self)weakSelf = self;
     task.finishBlock = ^(SQRPlayerItemCacheTask *task, NSError *error)
@@ -291,6 +301,7 @@
         __strong __typeof(weakSelf)strongSelf = weakSelf;
         if (error)
         {
+            LOG_E(@"cache loader load Data failed. ranage: %@ : %@",NSStringFromRange(range),error);
             [strongSelf completeRequest:task.loadingRequest task:error];
         }
         else
@@ -299,16 +310,30 @@
                 [strongSelf completeRequest:task.loadingRequest task:nil];
             }
         }
+        
+#ifdef SingleQueue
+        LOG_I(@"请求成功，当前队列任务数:  %lu/ 1",queue.operationCount);
+#else
+        LOG_I(@"请求成功，当前队列任务数:  %lu/%lu",queue.operationCount,_queues.count);
+#endif
     };
     [queue addOperation:task];
-    
-    LOG_I(@"current  queue:  %lu / %lu",queue.operationCount,_queues.count);
+
+#ifdef SingleQueue
+    LOG_I(@"队列任务数:  %lu/ 1",queue.operationCount);
+#else
+    LOG_I(@"队列任务数:  %lu/%lu",queue.operationCount,_queues.count);
+#endif
 }
 
 #pragma mark - tasks 
 
 - (NSString *)keyForLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest {
-    NSString * url      = loadingRequest.request.URL.absoluteString;
+    NSString * urlString = loadingRequest.request.URL.absoluteString;
+    if (!urlString) {
+        urlString = @"no_url";
+    }
+    NSString * url      = [urlString mc_md5];
     NSString * range    = [NSString stringWithFormat:@"?range=%lli-%lu",loadingRequest.dataRequest.requestedOffset,(long int)loadingRequest.dataRequest.requestedLength];
     
 #ifdef SingleQueue
@@ -318,10 +343,10 @@
 }
 
 - (void)addTaskQueue:(AVAssetResourceLoadingRequest *)loadingRequest {
+    [self cancelAllQueue];
+    
 #ifdef SingleQueue
-    if (_queues[[self keyForLoadingRequest:loadingRequest]]) {
-        return;
-    }
+    return;
 #endif
     NSOperationQueue * queue = [[NSOperationQueue alloc] init];
     queue.maxConcurrentOperationCount = 1;
@@ -333,21 +358,34 @@
 }
 
 - (void)removeTaskQueue:(AVAssetResourceLoadingRequest *)loadingRequest {
-    NSOperationQueue * queue = _queues[[self keyForLoadingRequest:loadingRequest]];
+    NSString * key = [self keyForLoadingRequest:loadingRequest];
+    
+    NSOperationQueue * queue = [_queues objectForKey:key];
     if (queue) {
+        [queue.operations makeObjectsPerformSelector:@selector(sqr_cancel)];
         [queue cancelAllOperations];
-        [queue.operations makeObjectsPerformSelector:@selector(cancel)];
+        [_queues removeObjectForKey:key];
+        LOG_I(@"remove queue:  %@",queue.name);
     }
+}
+
+- (NSOperationQueue *)queueForRequest:(AVAssetResourceLoadingRequest *)loadingRequet {
+#ifdef SingleQueue
+    return _singleQueue;
+#endif
     
-    [_queues removeObjectForKey:[self keyForLoadingRequest:loadingRequest]];
-    
-    LOG_I(@"remove queue:  %@",queue.name);
+    NSOperationQueue * queue = self.queues[[self keyForLoadingRequest:loadingRequet]];
+    return queue;
 }
 
 - (void)cancelAllQueue {
+#ifdef SingleQueue
+    [_singleQueue cancelAllOperations];
+#endif
+    
     for (NSOperationQueue * queue in _queues.allValues) {
+        [queue.operations makeObjectsPerformSelector:@selector(sqr_cancel)];
         [queue cancelAllOperations];
-        [queue.operations makeObjectsPerformSelector:@selector(cancel)];
     }
     [_queues removeAllObjects];
 }
@@ -365,7 +403,7 @@
 - (void)resourceLoader:(AVAssetResourceLoader *)resourceLoader didCancelLoadingRequest:(AVAssetResourceLoadingRequest *)loadingRequest
 {
     
-    LOG_I(@"cancel play loadingRequest:   < Offset = %lld, currentOffset = %lld, Length = %ld >", loadingRequest.dataRequest.requestedOffset, loadingRequest.dataRequest.currentOffset, loadingRequest.dataRequest.requestedLength);
+    LOG_I(@"播放器取消之前请求。 范围：: Offset:%lld  currentOffset:%lld  Length:%ld >", loadingRequest.dataRequest.requestedOffset, loadingRequest.dataRequest.currentOffset, loadingRequest.dataRequest.requestedLength);
 
     [_pendingRequests removeObject:loadingRequest];
     [self removeTaskQueue:loadingRequest];

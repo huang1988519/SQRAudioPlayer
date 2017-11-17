@@ -1,8 +1,6 @@
 
 //  Created by huanwh on 2017/7/31.
 
-//
-
 #import "AVPlayerItem+SQRCacheSupport.h"
 #import "SQRPlayerItemCacheLoader.h"
 #import "SQRCacheSupportUtils.h"
@@ -10,6 +8,8 @@
 
 NSString *const AVPlayerMCCacheErrorDomain = @"AVPlayerMCCacheErrorDomain";
 static const void * const kAVPlayerItemMCCacheSupportCacheLoaderKey = &kAVPlayerItemMCCacheSupportCacheLoaderKey;
+static const void * const kAVPlayerItemAssetHaveLoadedKey = &kAVPlayerItemAssetHaveLoadedKey;
+
 
 @implementation AVPlayerItem (SQRCacheSupport)
 
@@ -96,6 +96,7 @@ static const void * const kAVPlayerItemMCCacheSupportCacheLoaderKey = &kAVPlayer
     if ([item respondsToSelector:@selector(setCanUseNetworkResourcesForLiveStreamingWhilePaused:)]) {
         item.canUseNetworkResourcesForLiveStreamingWhilePaused =  YES;
     }
+
     objc_setAssociatedObject(item, kAVPlayerItemMCCacheSupportCacheLoaderKey, cacheLoader, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     return item;
 }
@@ -131,5 +132,13 @@ static const void * const kAVPlayerItemMCCacheSupportCacheLoaderKey = &kAVPlayer
 - (NSString *)mc_cacheFilePath
 {
     return [self mc_cacheLoader].cacheFilePath;
+}
+
+- (void)setAssetLoaded:(BOOL)assetLoaded {
+    objc_setAssociatedObject(self, &kAVPlayerItemAssetHaveLoadedKey, @(assetLoaded), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)assetLoaded {
+    return [(NSNumber *)objc_getAssociatedObject(self, &kAVPlayerItemAssetHaveLoadedKey) boolValue];
 }
 @end

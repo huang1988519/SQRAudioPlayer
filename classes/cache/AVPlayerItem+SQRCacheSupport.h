@@ -25,6 +25,8 @@ typedef NS_ENUM(NSUInteger, AVPlayerMCCacheError)
  */
 @property (nonatomic,copy,readonly) NSString *mc_cacheFilePath NS_AVAILABLE(10_9, 7_0);
 
+@property (nonatomic,assign) BOOL assetLoaded;
+
 /**
  *  本地的 AVPlayerItem, 等同  -mc_playerItemWithRemoteURL:URL options:nil error:error
  *
@@ -50,7 +52,7 @@ typedef NS_ENUM(NSUInteger, AVPlayerMCCacheError)
  *  @param URL           original request url
  *  @param options       初始化 AVURLAsset的配置字典 .  AVURLAssetPreferPreciseDurationAndTimingKey and AVURLAssetReferenceRestrictionsKey
  *
- *  @param cacheFilePath 设置缓存路径, 如果设置nil，  则默认 NSTemporaryDirectory()/AVPlayerMCCache
+ *  @param cacheFilePath 设置缓存路径, 如果设置nil，  则默认 Caches/AVPlayerMCCache
  *  @param error         nil,没有错误则返回. 失败, 媒体流不被缓存
  *
  *  @return 本地 AVPlayerItem

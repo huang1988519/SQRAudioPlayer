@@ -10,12 +10,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../classes/SQRPlayer.m"
-            timestampString = "524406468.642106"
+            timestampString = "532612390.388559"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "304"
-            endingLineNumber = "304"
-            landmarkName = "-playNextItem"
+            startingLineNumber = "301"
+            endingLineNumber = "301"
+            landmarkName = "-prepareToPlay:complete:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../classes/SQRMediaItem.m"
+            timestampString = "532612484.554445"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "-dealloc"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

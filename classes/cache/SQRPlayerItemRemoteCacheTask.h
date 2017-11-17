@@ -8,6 +8,5 @@
 
 @interface SQRPlayerItemRemoteCacheTask : SQRPlayerItemCacheTask
 
-@property (nonatomic,strong) NSHTTPURLResponse *response;
-
+@property (nonatomic,strong) NSHTTPURLResponse  *response;
 @end

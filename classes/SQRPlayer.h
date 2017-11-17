@@ -11,6 +11,9 @@
 #import <AVFoundation/AVFoundation.h>
 
 
+typedef void(^PrepareCompleteHandle)(NSError *error);
+
+
 @class SQRPlayer;
 
 typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
@@ -42,7 +45,8 @@ typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
 - (void)mediaPlayerRetryNext:(SQRPlayer *)player error:(NSError *)error media:(SQRMediaItem *)item;
 
 /// 应用程序被中断
-- (void)mediaPlayerDidInterrupt:(SQRPlayer *)player interruptState:(AVAudioSessionInterruptionType)type;
+- (void)mediaPlayerDidInterrupt:(SQRPlayer *)player interruptState:(AVAudioSessionInterruptionType)type resume:(BOOL)isNeedResume;
+- (void)mediaPlayerIsBuffering:(SQRPlayer *)player isBuffering:(BOOL)buffering;
 /**
  切换音频输出
  * 切换到扬声器时，暂停播放
@@ -55,8 +59,6 @@ typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
 
 /// 锁屏时显示的图像. 在 SQRMediaItem来不及获取 图像时使用
 - (UIImage *)mediaPlayerArtworkImage:(SQRPlayer *)player media:(SQRMediaItem *)item;
-
-
 @end
 
 
@@ -71,6 +73,7 @@ typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
 - (void)play;
 - (void)pause;
 - (void)stop;
+- (void)clear;
 
 /* 添加媒体 移除媒体 替换媒体*/
 - (void)addPlayItem:(SQRMediaItem *)item;
@@ -88,15 +91,29 @@ typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
 - (void)playPreviouseItem;
 
 /** 获取当前播放item*/
-- (SQRMediaItem *)currentPlayItem;
+- (SQRMediaItem *)currentItem;
 
-- (void)prepareToPlay:(SQRMediaItem *)item complete:(void(^)(AVPlayerItem *avitem, NSError *error))completeHandle;
+- (void)prepareToPlay:(SQRMediaItem *)item complete:(PrepareCompleteHandle)completeHandle;
 /* 快进 */
 - (void)seekTo:(NSTimeInterval)time;
 
 /* 当前播放进度   当前播放总时长*/
 - (NSTimeInterval)currentPlaybackTime;
 - (NSTimeInterval)currentPlaybackDuration;
+
+/** 刷新锁屏信息 */
+- (void)refreshLockInfo:(SQRMediaItem *)item;
+
+- (void)cancelRequests;
+- (void)resumeRequests;
+
+/**
+ 是否完整缓冲
+
+ @param url 待播放的URL
+ @return YES 本地已有完整缓冲  NO缓冲不完整，需要网络加载
+ */
+- (BOOL)bufferCompleteWithUrl:(NSURL *)url;
 @end
 
 
@@ -131,4 +148,13 @@ typedef NS_ENUM(NSUInteger, SQRMediaPlaybackState) {
  @return 错误信息
  */
 - (NSError *)removeAllCache;
+@end
+
+@interface SQRPlayer (Logger)
+/**
+ 转义 播放器状态为字符串
+ 
+ @return 播放器状态
+ */
++ (NSString *)descriptionForState:(SQRMediaPlaybackState)state;
 @end

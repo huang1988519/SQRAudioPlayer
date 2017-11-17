@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -50,7 +50,7 @@
                                 </connections>
                             </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sod-Qp-7eg">
-                                <rect key="frame" x="74" y="495" width="267" height="31"/>
+                                <rect key="frame" x="74" y="495" width="254.5" height="31"/>
                                 <connections>
                                     <action selector="seekTo:" destination="BYZ-38-t0r" eventType="valueChanged" id="y7e-06-ZSc"/>
                                 </connections>
@@ -115,7 +115,7 @@
                                 </connections>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="WJ9-vx-dZK">
-                                <rect key="frame" x="76" y="533" width="263" height="2"/>
+                                <rect key="frame" x="76" y="533" width="250.5" height="2"/>
                             </progressView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="播放" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4k8-D0-w4n">
                                 <rect key="frame" x="31" y="503" width="25" height="14.5"/>
@@ -129,6 +129,12 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfa-rb-Onc">
+                                <rect key="frame" x="331.5" y="504" width="28.5" height="13.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -137,6 +143,7 @@
                             <constraint firstItem="6Lc-Fc-gIw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="50" id="6UU-q1-HdD"/>
                             <constraint firstItem="ODg-yv-2Jq" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="83c-xl-8JZ"/>
                             <constraint firstItem="WJ9-vx-dZK" firstAttribute="trailing" secondItem="sod-Qp-7eg" secondAttribute="trailing" id="9G1-5H-efZ"/>
+                            <constraint firstItem="kfa-rb-Onc" firstAttribute="leading" secondItem="sod-Qp-7eg" secondAttribute="trailing" constant="5" id="ApN-wY-OBQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="6Lc-Fc-gIw" secondAttribute="trailing" constant="50" id="BeA-LH-3eI"/>
                             <constraint firstItem="SxL-Xf-Mxb" firstAttribute="bottom" secondItem="6Lc-Fc-gIw" secondAttribute="bottom" id="Col-6q-5jw"/>
                             <constraint firstItem="6Lc-Fc-gIw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Dvv-4x-lF2"/>
@@ -147,14 +154,15 @@
                             <constraint firstItem="WJ9-vx-dZK" firstAttribute="top" secondItem="sod-Qp-7eg" secondAttribute="bottom" constant="8" id="KW5-JV-JxM"/>
                             <constraint firstItem="6Lc-Fc-gIw" firstAttribute="top" secondItem="sod-Qp-7eg" secondAttribute="bottom" constant="42" id="LZJ-gE-YG7"/>
                             <constraint firstAttribute="trailing" secondItem="SxL-Xf-Mxb" secondAttribute="trailing" constant="12" id="Lsl-TN-k8R"/>
+                            <constraint firstAttribute="trailing" secondItem="kfa-rb-Onc" secondAttribute="trailing" constant="15" id="Prf-zo-C9W"/>
                             <constraint firstItem="jAu-Z1-m9H" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="12" id="QIP-DN-MJO"/>
+                            <constraint firstItem="kfa-rb-Onc" firstAttribute="centerY" secondItem="sod-Qp-7eg" secondAttribute="centerY" id="RbL-L9-dVC"/>
                             <constraint firstAttribute="trailing" secondItem="ODg-yv-2Jq" secondAttribute="trailing" id="U9x-7Z-SM7"/>
                             <constraint firstItem="WJ9-vx-dZK" firstAttribute="leading" secondItem="sod-Qp-7eg" secondAttribute="leading" id="aF3-nD-aA3"/>
                             <constraint firstItem="4k8-D0-w4n" firstAttribute="centerY" secondItem="sod-Qp-7eg" secondAttribute="centerY" id="dAv-Yx-IIL"/>
                             <constraint firstItem="jAu-Z1-m9H" firstAttribute="top" secondItem="6Lc-Fc-gIw" secondAttribute="top" id="dxT-nv-2QG"/>
                             <constraint firstItem="ID9-0O-kl4" firstAttribute="centerY" secondItem="WJ9-vx-dZK" secondAttribute="centerY" id="hfc-is-cwV"/>
                             <constraint firstItem="BEd-DB-BdN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hy9-kA-Yi1"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="sod-Qp-7eg" secondAttribute="trailing" constant="20" id="iHs-oq-H4p"/>
                             <constraint firstItem="sod-Qp-7eg" firstAttribute="top" secondItem="XuT-kP-Ah6" secondAttribute="bottom" constant="20" id="imh-35-YXY"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="6Lc-Fc-gIw" secondAttribute="bottom" constant="20" id="kBw-VZ-m6X"/>
                             <constraint firstItem="sod-Qp-7eg" firstAttribute="top" secondItem="BEd-DB-BdN" secondAttribute="bottom" constant="74" id="mMn-00-7Ff"/>
@@ -165,6 +173,7 @@
                     </view>
                     <connections>
                         <outlet property="progress" destination="WJ9-vx-dZK" id="tEp-p8-6UL"/>
+                        <outlet property="progressLabel" destination="kfa-rb-Onc" id="ZJJ-O4-0O7"/>
                         <outlet property="slider" destination="sod-Qp-7eg" id="PD9-xZ-VKV"/>
                     </connections>
                 </viewController>

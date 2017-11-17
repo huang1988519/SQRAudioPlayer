@@ -12,12 +12,17 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 
-@interface ViewController ()<SQRMediaPlayerDelegate>
+@interface ViewController ()<SQRMediaPlayerDelegate,SQRPlayerNetworkChangedProtocol>
 {
     SQRPlayer * _player;
 }
 @property (weak, nonatomic) IBOutlet UISlider *slider;
 @property (weak, nonatomic) IBOutlet UIProgressView *progress;
+
+@property (weak, nonatomic) IBOutlet UILabel *playTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *cachingTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *playingName;
+@property (weak, nonatomic) IBOutlet UILabel *progressLabel;
 @end
 
 @implementation ViewController
@@ -27,6 +32,8 @@
     
     _player = [SQRPlayer sharePlayer];
     _player.delegate = self;
+    
+    [SQRPlayer registHandler:self protocol:@protocol(SQRPlayerNetworkChangedProtocol)];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -54,7 +61,7 @@
     item.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group30/M03/6C/8E/wKgJXll58uDQ-lJnABJ__ybdmiw564.m4a"]];
     item.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group8/M08/1C/A3/wKgDYVV3xTizBpzwAEvysDE32Lk219.m4a"]];
     
-    [_player prepareToPlay:item complete:^(AVPlayerItem *avitem, NSError *error) {
+    [_player prepareToPlay:item complete:^( NSError *error) {
         [_player seekTo:400];
         [_player play];
     }];
@@ -81,16 +88,19 @@
 - (IBAction)setupQueue:(id)sender {
     SQRMediaItem * item1 = [SQRMediaItem new];
     item1.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group7/M0B/1B/CE/wKgDWlV2iSWwdkEQAEuBnDfPtxw914.m4a"]];
+    item1.title = @"音频1";
     
     SQRMediaItem * item2 = [SQRMediaItem new];
-    item2.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group12/M00/1C/AD/wKgDW1V39AfDOSDwAE7IowCHNWQ865.m4a"]];
+    item2.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group30/M02/42/79/wKgJXll4mDbAlqfhAZTHUm3r6Mk310.m4a"]];
+    item2.title = @"音频2";
     
     SQRMediaItem * item3 = [SQRMediaItem new];
-    item3.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group8/M08/1C/A3/wKgDYVV3xTizBpzwAEvysDE32Lk219.m4a"]];
+    item3.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group31/M05/C9/A9/wKgJSVmLhF_g1zP9AB9anbI6d1k907.m4a"]];
+    item3.title = @"音频3";
     
     SQRMediaItem * item4 = [SQRMediaItem new];
-    item4.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group7/M09/2D/65/wKgDWlWKSmOB3Sd6AFOahV91Rwo643.m4a"]];
-    
+    item4.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group31/M05/76/FD/wKgJSVmHl0Hw6WQVACLDoYiU2h0159.m4a"]];
+    item4.title = @"音频4";
     
     /*
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -100,25 +110,26 @@
     NSString * localPath = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"m4a"];
     SQRMediaItem * item5 = [SQRMediaItem new];
     item5.assetUrls = @[[NSURL fileURLWithPath:localPath]];
+    item5.title = @"本地音频";
     
     [_player setQueue:@[item5,item1,item2,item3,item4]];
 }
 - (IBAction)seekTo:(UISlider *)slider {
-    if ([_player playbackState] == SQRMediaPlaybackStatePlaying) {
-        
-        float offset = slider.value * [_player currentPlaybackDuration];
-        [_player seekTo:offset];
-    }
+    float offset = slider.value * [_player currentPlaybackDuration];
+    [_player seekTo:offset];
 }
 
 #pragma mark - delegate
 
 -(BOOL)mediaPlayerWillStartPlaying:(SQRPlayer *)player media:(SQRMediaItem *)item {
+    self.playingName.text = [NSString stringWithFormat:@"%@",item.title];
     return YES;
 }
 
 -(void)mediaPlayerDidUpdateBufferProgress:(float)progress player:(SQRPlayer *)player media:(SQRMediaItem *)item {
-//    LOG_I(@"play buffer progress: %0.2f",progress);
+    
+    _cachingTimeLabel.text = [NSString stringWithFormat:@"%0.1lf / %0.1lf",[player currentPlaybackDuration] * progress,[player currentPlaybackDuration]];
+
     [self.progress setProgress:progress];
 }
 
@@ -129,9 +140,28 @@
 - (void)mediaPlayerDidChangedPlaybackTime:(SQRPlayer *)player {
     float progress = [player currentPlaybackTime] / [player currentPlaybackDuration];
     
+    _playTimeLabel.text = [NSString stringWithFormat:@"%0.1lf / %0.1lf",[player currentPlaybackTime],[player currentPlaybackDuration]];
+    _progressLabel.text = [NSString stringWithFormat:@"%0.1lf / %0.1lf",[player currentPlaybackTime],[player currentPlaybackDuration]];
+    
     if (!_slider.isTracking) {
         [_slider setValue:progress animated:YES];
     }
+}
+
+-(void)mediaPlayerWillChangeState:(SQRPlayer *)player state:(SQRMediaPlaybackState)state {
+}
+
+-(void)mediaPlayerDidFailedWithError:(NSError *)error player:(SQRPlayer *)player media:(SQRMediaItem *)item {
+    LOG_E(@"播放器播放失败",nil);
+}
+
+#pragma mark - network
+
+-(BOOL)mediaPlayerCanUseNetwork:(NSURL *)url {
+    if ([url isEqual:[NSURL URLWithString:@"http://audio.xmcdn.com/group30/M02/42/79/wKgJXll4mDbAlqfhAZTHUm3r6Mk310.m4a"]]) {
+        return YES;
+    }
+    return YES;
 }
 
 #pragma mark - remote control

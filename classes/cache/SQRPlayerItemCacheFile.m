@@ -17,13 +17,14 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 @interface SQRPlayerItemCacheFile ()
 {
 @private
-    NSMutableArray *_ranges;
-    NSFileHandle *_writeFileHandle;
-    NSFileHandle *_readFileHandle;
     BOOL _compelete;
     /// 接受数据达到上限之后强制保存进度.default is 10
     NSUInteger _recieveMaxCount;
 }
+
+@property (atomic, strong)NSMutableArray *ranges;
+@property (atomic, strong)NSFileHandle *writeFileHandle;
+@property (atomic, strong)NSFileHandle *readFileHandle;
 @end
 
 @implementation SQRPlayerItemCacheFile
@@ -70,9 +71,9 @@ const NSUInteger kForceSynchronousMaxCount = 20;
         
         _cacheFilePath = cacheFilePath;
         _indexFilePath = indexFilePath;
-        _ranges = [[NSMutableArray alloc] init];
-        _readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
-        _writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
+        self.ranges = [[NSMutableArray alloc] init];
+        self.readFileHandle = [NSFileHandle fileHandleForReadingAtPath:_cacheFilePath];
+        self.writeFileHandle = [NSFileHandle fileHandleForWritingAtPath:_cacheFilePath];
         _recieveMaxCount = 0;
         
         NSString *indexStr = [NSString stringWithContentsOfFile:_indexFilePath encoding:NSUTF8StringEncoding error:nil];
@@ -94,8 +95,10 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 
 - (void)dealloc
 {
-    [_readFileHandle closeFile];
-    [_writeFileHandle closeFile];
+    LOG_I(@"释放 SQRPlayerItemCacheFile",nil);
+    
+    [self.readFileHandle closeFile];
+    [self.writeFileHandle closeFile];
 }
 
 #pragma mark - serialize
@@ -107,7 +110,7 @@ const NSUInteger kForceSynchronousMaxCount = 20;
     }
     
     NSNumber *fileSize = indexDic[MCAVPlayerCacheFileSizeKey];
-    if (fileSize && [fileSize isKindOfClass:[NSNumber class]])
+    if (fileSize != nil && [fileSize isKindOfClass:[NSNumber class]])
     {
         _fileLength = [fileSize unsignedIntegerValue];
     }
@@ -117,12 +120,12 @@ const NSUInteger kForceSynchronousMaxCount = 20;
         return NO;
     }
     
-    [_ranges removeAllObjects];
+    [self.ranges removeAllObjects];
     NSMutableArray *rangeArray = indexDic[MCAVPlayerCacheFileZoneKey];
     for (NSString *rangeStr in rangeArray)
     {
         NSRange range = NSRangeFromString(rangeStr);
-        [_ranges addObject:[NSValue valueWithRange:range]];
+        [self.ranges addObject:[NSValue valueWithRange:range]];
     }
     
     _responseHeaders = indexDic[MCAVPlayerCacheFileResponseHeadersKey];
@@ -133,7 +136,7 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 - (NSString *)unserializeIndex
 {
     NSMutableArray *rangeArray = [[NSMutableArray alloc] init];
-    for (NSValue *range in _ranges)
+    for (NSValue *range in self.ranges)
     {
         [rangeArray addObject:NSStringFromRange([range rangeValue])];
     }
@@ -166,9 +169,9 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 #pragma mark - property
 - (NSUInteger)cachedDataBound
 {
-    if (_ranges.count > 0)
+    if (self.ranges.count > 0)
     {
-        NSRange range = [[_ranges lastObject] rangeValue];
+        NSRange range = [[self.ranges lastObject] rangeValue];
         return NSMaxRange(range);
     }
     return 0;
@@ -196,16 +199,16 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 #pragma mark - range
 - (void)mergeRanges
 {
-    for (int i = 0; i < _ranges.count; ++i)
+    for (int i = 0; i < self.ranges.count; ++i)
     {
-        if ((i + 1) < _ranges.count)
+        if ((i + 1) < self.ranges.count)
         {
-            NSRange currentRange = [_ranges[i] rangeValue];
-            NSRange nextRange = [_ranges[i + 1] rangeValue];
+            NSRange currentRange = [self.ranges[i] rangeValue];
+            NSRange nextRange = [self.ranges[i + 1] rangeValue];
             if (MCRangeCanMerge(currentRange, nextRange))
             {
-                [_ranges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
-                [_ranges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
+                [self.ranges removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(i, 2)]];
+                [self.ranges insertObject:[NSValue valueWithRange:NSUnionRange(currentRange, nextRange)] atIndex:i];
                 i -= 1;
             }
         }
@@ -220,19 +223,19 @@ const NSUInteger kForceSynchronousMaxCount = 20;
     }
     
     BOOL inserted = NO;
-    for (int i = 0; i < _ranges.count; ++i)
+    for (int i = 0; i < self.ranges.count; ++i)
     {
-        NSRange currentRange = [_ranges[i] rangeValue];
+        NSRange currentRange = [self.ranges[i] rangeValue];
         if (currentRange.location >= range.location)
         {
-            [_ranges insertObject:[NSValue valueWithRange:range] atIndex:i];
+            [self.ranges insertObject:[NSValue valueWithRange:range] atIndex:i];
             inserted = YES;
             break;
         }
     }
     if (!inserted)
     {
-        [_ranges addObject:[NSValue valueWithRange:range]];
+        [self.ranges addObject:[NSValue valueWithRange:range]];
     }
     
     [self mergeRanges];
@@ -262,9 +265,9 @@ const NSUInteger kForceSynchronousMaxCount = 20;
             return MCInvalidRange;
         }
         
-        for (int i = 0; i < _ranges.count; ++i)
+        for (int i = 0; i < self.ranges.count; ++i)
         {
-            NSRange range = [_ranges[i] rangeValue];
+            NSRange range = [self.ranges[i] rangeValue];
             if (NSLocationInRange(pos, range))
             {
                 return range;
@@ -282,9 +285,9 @@ const NSUInteger kForceSynchronousMaxCount = 20;
     }
     
     NSUInteger start = pos;
-    for (int i = 0; i < _ranges.count; ++i)
+    for (int i = 0; i < self.ranges.count; ++i)
     {
-        NSRange range = [_ranges[i] rangeValue];
+        NSRange range = [self.ranges[i] rangeValue];
         if (NSLocationInRange(start, range))
         {
             start = NSMaxRange(range);
@@ -311,9 +314,9 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 
 - (void)checkCompelete
 {
-    if (_ranges && _ranges.count == 1)
+    if (self.ranges && self.ranges.count == 1)
     {
-        NSRange range = [_ranges[0] rangeValue];
+        NSRange range = [self.ranges[0] rangeValue];
         if (range.location == 0 && (range.length == _fileLength))
         {
             _compelete = YES;
@@ -326,7 +329,7 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 #pragma mark - file
 - (BOOL)truncateFileWithFileLength:(NSUInteger)fileLength;
 {
-    if (!_writeFileHandle)
+    if (!self.writeFileHandle)
     {
         return NO;
     }
@@ -334,8 +337,8 @@ const NSUInteger kForceSynchronousMaxCount = 20;
     _fileLength = fileLength;
     @try
     {
-        [_writeFileHandle truncateFileAtOffset:_fileLength * sizeof(Byte)];
-        unsigned long long end = [_writeFileHandle seekToEndOfFile];
+        [self.writeFileHandle truncateFileAtOffset:_fileLength * sizeof(Byte)];
+        unsigned long long end = [self.writeFileHandle seekToEndOfFile];
         if (end != _fileLength)
         {
             return NO;
@@ -371,15 +374,15 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 {
     _recieveMaxCount++;
     
-    if (!_writeFileHandle)
+    if (!self.writeFileHandle)
     {
         return NO;
     }
     
     @try
     {
-        [_writeFileHandle seekToFileOffset:offset];
-        [_writeFileHandle mc_safeWriteData:data];
+        [self.writeFileHandle seekToFileOffset:offset];
+        [self.writeFileHandle mc_safeWriteData:data];
     }
     @catch (NSException * e)
     {
@@ -418,7 +421,7 @@ const NSUInteger kForceSynchronousMaxCount = 20;
     NSRange range = [self cachedRangeForRange:NSMakeRange(_readOffset, length)];
     if (MCValidFileRange(range))
     {
-        NSData *data = [_readFileHandle readDataOfLength:range.length];
+        NSData *data = [self.readFileHandle readDataOfLength:range.length];
         _readOffset += [data length];
         return data;
     }
@@ -428,14 +431,14 @@ const NSUInteger kForceSynchronousMaxCount = 20;
 #pragma mark - seek
 - (void)seekToPosition:(NSUInteger)pos
 {
-    [_readFileHandle seekToFileOffset:pos];
-    _readOffset = (NSUInteger)_readFileHandle.offsetInFile;
+    [self.readFileHandle seekToFileOffset:pos];
+    _readOffset = (NSUInteger)self.readFileHandle.offsetInFile;
 }
 
 - (void)seekToEnd
 {
-    [_readFileHandle seekToEndOfFile];
-    _readOffset = (NSUInteger)_readFileHandle.offsetInFile;
+    [self.readFileHandle seekToEndOfFile];
+    _readOffset = (NSUInteger)self.readFileHandle.offsetInFile;
 }
 @end
 
