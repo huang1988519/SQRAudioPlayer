@@ -5,6 +5,25 @@
 Usage
 ---
 
+请求音频资源时，会把播放器请求的数据段拆分为`本地`&`远程`请求放入串行队列。
+设置url，开始播放时的步骤为：
+
+### 数据流  
+* 播放器请求 0-2 字段，解析音频格式
+	* 写入本地
+* 播放器请求 0-length(music)
+	* 0- length(local)
+	* location(local)-length()剩余网络资源)  
+		* 写入本地
+* 播放器接收音频流开始播放
+
+### 缓存
+1. 创建音频空文件 和 音频配置文件http header （.idx）
+2. 按照网络请求数据和范围，对本地音频文件进行数据填充，并对音频文件范围进行计算合并。
+3. 每次获取本地音频播放时，判断音频是否还在有效期内.
+
+
+### 使用
 初始化
 ```
 _player = [SQRPlayer sharePlayer];
@@ -88,7 +107,7 @@ if ([_player playbackState] == SQRMediaPlaybackStatePlaying) {
 
 /* 设置多个源，播放当前源地址 尝试失败*/
 - (void)mediaPlayerRetryNext:(SQRPlayer *)player error:(NSError *)error media:(SQRMediaItem *)item {
-  
+
 }
 
 ```
