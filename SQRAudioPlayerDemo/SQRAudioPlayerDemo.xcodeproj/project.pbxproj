@@ -31,6 +31,8 @@
 		D9079AC721C8EDE50020CBB6 /* SQRPlayerItemCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9F21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m */; };
 		D9079AC821C8EDE50020CBB6 /* SQRPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA121C8E8FF0020CBB6 /* SQRPlayer.m */; };
 		D9079AC921C8EDE50020CBB6 /* SQRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA421C8E8FF0020CBB6 /* SQRMediaItem.m */; };
+		D9079AD121C8F1310020CBB6 /* SQRMediaItem.h in Headers */ = {isa = PBXBuildFile; fileRef = D9079AA021C8E8FF0020CBB6 /* SQRMediaItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9079AD221C8F1310020CBB6 /* SQRPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = D9079AA321C8E8FF0020CBB6 /* SQRPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D92806C11F31FD29000F8E53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C01F31FD29000F8E53 /* main.m */; };
 		D92806C41F31FD29000F8E53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C31F31FD29000F8E53 /* AppDelegate.m */; };
 		D92806C71F31FD29000F8E53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C61F31FD29000F8E53 /* ViewController.m */; };
@@ -230,6 +232,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9079ABF21C8EDCD0020CBB6 /* SQRMediaPlayer.h in Headers */,
+				D9079AD121C8F1310020CBB6 /* SQRMediaItem.h in Headers */,
+				D9079AD221C8F1310020CBB6 /* SQRPlayer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
