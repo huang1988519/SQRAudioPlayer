@@ -7,10 +7,8 @@
 //
 
 #import "ViewController.h"
-#import "SQRPlayer.h"
-#import "SQRMediaPlayer.h"
 #import <MediaPlayer/MediaPlayer.h>
-
+#import "SQRMediaPlayer.h"
 
 @interface ViewController ()<SQRMediaPlayerDelegate,SQRPlayerNetworkChangedProtocol>
 {
@@ -53,13 +51,11 @@
     [super viewDidDisappear:animated];
 }
 
-
-
-
+// 测试地址容易失效，请填入最新地址。
 - (IBAction)playTest:(id)sender {
     SQRMediaItem * item = [SQRMediaItem new];
-    item.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group30/M03/6C/8E/wKgJXll58uDQ-lJnABJ__ybdmiw564.m4a"]];
-    item.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group8/M08/1C/A3/wKgDYVV3xTizBpzwAEvysDE32Lk219.m4a"]];
+    item.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group7/M0B/1B/CE/wKgDWlV2iSWwdkEQAEuBnDfPtxw914.m4a"]];
+    item.assetUrls = @[[NSURL URLWithString:@"http://t33.tingchina.com/yousheng/%E5%88%91%E4%BE%A6%E6%8E%A8%E7%90%86/%E4%BD%99%E7%BD%AA/001_%E5%A5%BD%E4%BA%8B%E4%B8%8A%E9%97%A8.mp3?key=883770cf8a033ba31a7b1a83a250f5e8_598462348"]];
     
     [_player prepareToPlay:item complete:^( NSError *error) {
         [_player seekTo:400];
@@ -101,12 +97,7 @@
     SQRMediaItem * item4 = [SQRMediaItem new];
     item4.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group31/M05/76/FD/wKgJSVmHl0Hw6WQVACLDoYiU2h0159.m4a"]];
     item4.title = @"音频4";
-    
-    /*
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docDir = [paths objectAtIndex:0];
-    NSString *localPath = [docDir stringByAppendingPathComponent:@"1.m4a"];
-    */
+
     NSString * localPath = [[NSBundle mainBundle] pathForResource:@"1" ofType:@"m4a"];
     SQRMediaItem * item5 = [SQRMediaItem new];
     item5.assetUrls = @[[NSURL fileURLWithPath:localPath]];

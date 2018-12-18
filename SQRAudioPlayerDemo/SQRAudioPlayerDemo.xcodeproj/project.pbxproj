@@ -7,26 +7,78 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D9079A7121C8E19B0020CBB6 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9079A6F21C8E1580020CBB6 /* CoreServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D9079A8A21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */; };
+		D9079A8B21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9079AA521C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9121C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m */; };
+		D9079AA621C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9721C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m */; };
+		D9079AA721C8E8FF0020CBB6 /* SQRCacheSupportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9821C8E8FF0020CBB6 /* SQRCacheSupportUtils.m */; };
+		D9079AA821C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9A21C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.m */; };
+		D9079AA921C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9B21C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m */; };
+		D9079AAA21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9C21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m */; };
+		D9079AAB21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9D21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m */; };
+		D9079AAC21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9F21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m */; };
+		D9079AAD21C8E8FF0020CBB6 /* SQRPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA121C8E8FF0020CBB6 /* SQRPlayer.m */; };
+		D9079AAE21C8E8FF0020CBB6 /* SQRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA421C8E8FF0020CBB6 /* SQRMediaItem.m */; };
 		D92806C11F31FD29000F8E53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C01F31FD29000F8E53 /* main.m */; };
 		D92806C41F31FD29000F8E53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C31F31FD29000F8E53 /* AppDelegate.m */; };
 		D92806C71F31FD29000F8E53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C61F31FD29000F8E53 /* ViewController.m */; };
 		D92806CA1F31FD29000F8E53 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D92806C81F31FD29000F8E53 /* Main.storyboard */; };
 		D92806CC1F31FD29000F8E53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D92806CB1F31FD29000F8E53 /* Assets.xcassets */; };
 		D92806CF1F31FD29000F8E53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D92806CD1F31FD29000F8E53 /* LaunchScreen.storyboard */; };
-		D92806EA1F31FD39000F8E53 /* AVPlayerItem+SQRCacheSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806D91F31FD39000F8E53 /* AVPlayerItem+SQRCacheSupport.m */; };
-		D92806EB1F31FD39000F8E53 /* SQRCacheSupportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806DB1F31FD39000F8E53 /* SQRCacheSupportUtils.m */; };
-		D92806EC1F31FD39000F8E53 /* SQRPlayerItemCacheFile.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806DD1F31FD39000F8E53 /* SQRPlayerItemCacheFile.m */; };
-		D92806ED1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806DF1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.m */; };
-		D92806EE1F31FD39000F8E53 /* SQRPlayerItemCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E11F31FD39000F8E53 /* SQRPlayerItemCacheTask.m */; };
-		D92806EF1F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E31F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.m */; };
-		D92806F01F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E51F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m */; };
-		D92806F11F31FD39000F8E53 /* SQRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E71F31FD39000F8E53 /* SQRMediaItem.m */; };
-		D92806F21F31FD39000F8E53 /* SQRPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806E91F31FD39000F8E53 /* SQRPlayer.m */; };
 		D98984061F41CEF100C24A07 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D98984051F41CEF100C24A07 /* 1.m4a */; };
-		D98984091F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D98984071F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D9079A8C21C8E88F0020CBB6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D92806B41F31FD29000F8E53 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D9079A3521C8DDF70020CBB6;
+			remoteInfo = SQRAudioPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D9079A8021C8E6E80020CBB6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D9079A8B21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQRAudioPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9079A3821C8DDF70020CBB6 /* SQRAudioPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SQRAudioPlayer.h; sourceTree = "<group>"; };
+		D9079A3921C8DDF70020CBB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9079A6F21C8E1580020CBB6 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		D9079A9021C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerHandlerFactory.h; sourceTree = "<group>"; };
+		D9079A9121C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemLocalCacheTask.m; sourceTree = "<group>"; };
+		D9079A9221C8E8FF0020CBB6 /* SQRCacheSupportUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRCacheSupportUtils.h; sourceTree = "<group>"; };
+		D9079A9321C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemCacheLoader.h; sourceTree = "<group>"; };
+		D9079A9421C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemCacheFile.h; sourceTree = "<group>"; };
+		D9079A9521C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayerItem+SQRCacheSupport.h"; sourceTree = "<group>"; };
+		D9079A9621C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemCacheTask.h; sourceTree = "<group>"; };
+		D9079A9721C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemRemoteCacheTask.m; sourceTree = "<group>"; };
+		D9079A9821C8E8FF0020CBB6 /* SQRCacheSupportUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRCacheSupportUtils.m; sourceTree = "<group>"; };
+		D9079A9921C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemLocalCacheTask.h; sourceTree = "<group>"; };
+		D9079A9A21C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerHandlerFactory.m; sourceTree = "<group>"; };
+		D9079A9B21C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemCacheFile.m; sourceTree = "<group>"; };
+		D9079A9C21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemCacheLoader.m; sourceTree = "<group>"; };
+		D9079A9D21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVPlayerItem+SQRCacheSupport.m"; sourceTree = "<group>"; };
+		D9079A9E21C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemRemoteCacheTask.h; sourceTree = "<group>"; };
+		D9079A9F21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemCacheTask.m; sourceTree = "<group>"; };
+		D9079AA021C8E8FF0020CBB6 /* SQRMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRMediaItem.h; sourceTree = "<group>"; };
+		D9079AA121C8E8FF0020CBB6 /* SQRPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayer.m; sourceTree = "<group>"; };
+		D9079AA221C8E8FF0020CBB6 /* SQRMediaPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRMediaPlayer.h; sourceTree = "<group>"; };
+		D9079AA321C8E8FF0020CBB6 /* SQRPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayer.h; sourceTree = "<group>"; };
+		D9079AA421C8E8FF0020CBB6 /* SQRMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRMediaItem.m; sourceTree = "<group>"; };
 		D92806BC1F31FD29000F8E53 /* SQRAudioPlayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SQRAudioPlayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D92806C01F31FD29000F8E53 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D92806C21F31FD29000F8E53 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -37,46 +89,90 @@
 		D92806CB1F31FD29000F8E53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D92806CE1F31FD29000F8E53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D92806D01F31FD29000F8E53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D92806D81F31FD39000F8E53 /* AVPlayerItem+SQRCacheSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AVPlayerItem+SQRCacheSupport.h"; sourceTree = "<group>"; };
-		D92806D91F31FD39000F8E53 /* AVPlayerItem+SQRCacheSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVPlayerItem+SQRCacheSupport.m"; sourceTree = "<group>"; };
-		D92806DA1F31FD39000F8E53 /* SQRCacheSupportUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRCacheSupportUtils.h; sourceTree = "<group>"; };
-		D92806DB1F31FD39000F8E53 /* SQRCacheSupportUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRCacheSupportUtils.m; sourceTree = "<group>"; };
-		D92806DC1F31FD39000F8E53 /* SQRPlayerItemCacheFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemCacheFile.h; sourceTree = "<group>"; };
-		D92806DD1F31FD39000F8E53 /* SQRPlayerItemCacheFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemCacheFile.m; sourceTree = "<group>"; };
-		D92806DE1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemCacheLoader.h; sourceTree = "<group>"; };
-		D92806DF1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemCacheLoader.m; sourceTree = "<group>"; };
-		D92806E01F31FD39000F8E53 /* SQRPlayerItemCacheTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemCacheTask.h; sourceTree = "<group>"; };
-		D92806E11F31FD39000F8E53 /* SQRPlayerItemCacheTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemCacheTask.m; sourceTree = "<group>"; };
-		D92806E21F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemLocalCacheTask.h; sourceTree = "<group>"; };
-		D92806E31F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemLocalCacheTask.m; sourceTree = "<group>"; };
-		D92806E41F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerItemRemoteCacheTask.h; sourceTree = "<group>"; };
-		D92806E51F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerItemRemoteCacheTask.m; sourceTree = "<group>"; };
-		D92806E61F31FD39000F8E53 /* SQRMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRMediaItem.h; sourceTree = "<group>"; };
-		D92806E71F31FD39000F8E53 /* SQRMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRMediaItem.m; sourceTree = "<group>"; };
-		D92806E81F31FD39000F8E53 /* SQRPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayer.h; sourceTree = "<group>"; };
-		D92806E91F31FD39000F8E53 /* SQRPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayer.m; sourceTree = "<group>"; };
-		D92806F31F342000000F8E53 /* SQRMediaPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRMediaPlayer.h; sourceTree = "<group>"; };
 		D98984051F41CEF100C24A07 /* 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1.m4a; sourceTree = "<group>"; };
-		D98984071F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQRPlayerHandlerFactory.m; sourceTree = "<group>"; };
-		D98984081F41CF4E00C24A07 /* SQRPlayerHandlerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQRPlayerHandlerFactory.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D9079A3321C8DDF70020CBB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9079A7121C8E19B0020CBB6 /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D92806B91F31FD29000F8E53 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9079A8A21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D9079A3721C8DDF70020CBB6 /* SQRAudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				D9079A3821C8DDF70020CBB6 /* SQRAudioPlayer.h */,
+				D9079A3921C8DDF70020CBB6 /* Info.plist */,
+			);
+			path = SQRAudioPlayer;
+			sourceTree = "<group>";
+		};
+		D9079A6E21C8E1580020CBB6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D9079A6F21C8E1580020CBB6 /* CoreServices.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D9079A8E21C8E8FF0020CBB6 /* classes */ = {
+			isa = PBXGroup;
+			children = (
+				D9079A8F21C8E8FF0020CBB6 /* cache */,
+				D9079AA021C8E8FF0020CBB6 /* SQRMediaItem.h */,
+				D9079AA121C8E8FF0020CBB6 /* SQRPlayer.m */,
+				D9079AA221C8E8FF0020CBB6 /* SQRMediaPlayer.h */,
+				D9079AA321C8E8FF0020CBB6 /* SQRPlayer.h */,
+				D9079AA421C8E8FF0020CBB6 /* SQRMediaItem.m */,
+			);
+			name = classes;
+			path = ../../classes;
+			sourceTree = "<group>";
+		};
+		D9079A8F21C8E8FF0020CBB6 /* cache */ = {
+			isa = PBXGroup;
+			children = (
+				D9079A9021C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.h */,
+				D9079A9121C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m */,
+				D9079A9221C8E8FF0020CBB6 /* SQRCacheSupportUtils.h */,
+				D9079A9321C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.h */,
+				D9079A9421C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.h */,
+				D9079A9521C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.h */,
+				D9079A9621C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.h */,
+				D9079A9721C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m */,
+				D9079A9821C8E8FF0020CBB6 /* SQRCacheSupportUtils.m */,
+				D9079A9921C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.h */,
+				D9079A9A21C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.m */,
+				D9079A9B21C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m */,
+				D9079A9C21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m */,
+				D9079A9D21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m */,
+				D9079A9E21C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.h */,
+				D9079A9F21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m */,
+			);
+			path = cache;
+			sourceTree = "<group>";
+		};
 		D92806B31F31FD29000F8E53 = {
 			isa = PBXGroup;
 			children = (
 				D92806BE1F31FD29000F8E53 /* SQRAudioPlayerDemo */,
+				D9079A3721C8DDF70020CBB6 /* SQRAudioPlayer */,
 				D92806BD1F31FD29000F8E53 /* Products */,
+				D9079A6E21C8E1580020CBB6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				D92806BC1F31FD29000F8E53 /* SQRAudioPlayerDemo.app */,
+				D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,7 +188,7 @@
 		D92806BE1F31FD29000F8E53 /* SQRAudioPlayerDemo */ = {
 			isa = PBXGroup;
 			children = (
-				D92806D61F31FD39000F8E53 /* classes */,
+				D9079A8E21C8E8FF0020CBB6 /* classes */,
 				D92806C21F31FD29000F8E53 /* AppDelegate.h */,
 				D92806C31F31FD29000F8E53 /* AppDelegate.m */,
 				D92806C51F31FD29000F8E53 /* ViewController.h */,
@@ -114,46 +211,37 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		D92806D61F31FD39000F8E53 /* classes */ = {
-			isa = PBXGroup;
-			children = (
-				D92806D71F31FD39000F8E53 /* cache */,
-				D92806E61F31FD39000F8E53 /* SQRMediaItem.h */,
-				D92806E71F31FD39000F8E53 /* SQRMediaItem.m */,
-				D92806E81F31FD39000F8E53 /* SQRPlayer.h */,
-				D92806E91F31FD39000F8E53 /* SQRPlayer.m */,
-				D92806F31F342000000F8E53 /* SQRMediaPlayer.h */,
-			);
-			name = classes;
-			path = ../../classes;
-			sourceTree = "<group>";
-		};
-		D92806D71F31FD39000F8E53 /* cache */ = {
-			isa = PBXGroup;
-			children = (
-				D92806D81F31FD39000F8E53 /* AVPlayerItem+SQRCacheSupport.h */,
-				D92806D91F31FD39000F8E53 /* AVPlayerItem+SQRCacheSupport.m */,
-				D92806DA1F31FD39000F8E53 /* SQRCacheSupportUtils.h */,
-				D92806DB1F31FD39000F8E53 /* SQRCacheSupportUtils.m */,
-				D92806DC1F31FD39000F8E53 /* SQRPlayerItemCacheFile.h */,
-				D92806DD1F31FD39000F8E53 /* SQRPlayerItemCacheFile.m */,
-				D92806DE1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.h */,
-				D92806DF1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.m */,
-				D92806E01F31FD39000F8E53 /* SQRPlayerItemCacheTask.h */,
-				D92806E11F31FD39000F8E53 /* SQRPlayerItemCacheTask.m */,
-				D92806E21F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.h */,
-				D92806E31F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.m */,
-				D92806E41F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.h */,
-				D92806E51F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m */,
-				D98984071F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m */,
-				D98984081F41CF4E00C24A07 /* SQRPlayerHandlerFactory.h */,
-			);
-			path = cache;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		D9079A3121C8DDF70020CBB6 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		D9079A3521C8DDF70020CBB6 /* SQRAudioPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9079A4121C8DDF70020CBB6 /* Build configuration list for PBXNativeTarget "SQRAudioPlayer" */;
+			buildPhases = (
+				D9079A3121C8DDF70020CBB6 /* Headers */,
+				D9079A3221C8DDF70020CBB6 /* Sources */,
+				D9079A3321C8DDF70020CBB6 /* Frameworks */,
+				D9079A3421C8DDF70020CBB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SQRAudioPlayer;
+			productName = SQRAudioPlayer;
+			productReference = D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		D92806BB1F31FD29000F8E53 /* SQRAudioPlayerDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D92806D31F31FD29000F8E53 /* Build configuration list for PBXNativeTarget "SQRAudioPlayerDemo" */;
@@ -161,10 +249,12 @@
 				D92806B81F31FD29000F8E53 /* Sources */,
 				D92806B91F31FD29000F8E53 /* Frameworks */,
 				D92806BA1F31FD29000F8E53 /* Resources */,
+				D9079A8021C8E6E80020CBB6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D9079A8D21C8E88F0020CBB6 /* PBXTargetDependency */,
 			);
 			name = SQRAudioPlayerDemo;
 			productName = SQRAudioPlayerDemo;
@@ -180,6 +270,11 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = wally.h;
 				TargetAttributes = {
+					D9079A3521C8DDF70020CBB6 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = L5GZZ68F2C;
+						ProvisioningStyle = Automatic;
+					};
 					D92806BB1F31FD29000F8E53 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = L5GZZ68F2C;
@@ -201,11 +296,19 @@
 			projectRoot = "";
 			targets = (
 				D92806BB1F31FD29000F8E53 /* SQRAudioPlayerDemo */,
+				D9079A3521C8DDF70020CBB6 /* SQRAudioPlayer */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D9079A3421C8DDF70020CBB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D92806BA1F31FD29000F8E53 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -220,27 +323,42 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D9079A3221C8DDF70020CBB6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D92806B81F31FD29000F8E53 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D92806EB1F31FD39000F8E53 /* SQRCacheSupportUtils.m in Sources */,
-				D92806ED1F31FD39000F8E53 /* SQRPlayerItemCacheLoader.m in Sources */,
-				D98984091F41CF4E00C24A07 /* SQRPlayerHandlerFactory.m in Sources */,
+				D9079AA521C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m in Sources */,
+				D9079AA921C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m in Sources */,
+				D9079AAE21C8E8FF0020CBB6 /* SQRMediaItem.m in Sources */,
+				D9079AAB21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m in Sources */,
+				D9079AA621C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m in Sources */,
 				D92806C71F31FD29000F8E53 /* ViewController.m in Sources */,
+				D9079AAD21C8E8FF0020CBB6 /* SQRPlayer.m in Sources */,
+				D9079AA821C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.m in Sources */,
+				D9079AA721C8E8FF0020CBB6 /* SQRCacheSupportUtils.m in Sources */,
+				D9079AAC21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m in Sources */,
+				D9079AAA21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m in Sources */,
 				D92806C41F31FD29000F8E53 /* AppDelegate.m in Sources */,
-				D92806EF1F31FD39000F8E53 /* SQRPlayerItemLocalCacheTask.m in Sources */,
-				D92806F21F31FD39000F8E53 /* SQRPlayer.m in Sources */,
-				D92806F11F31FD39000F8E53 /* SQRMediaItem.m in Sources */,
-				D92806EE1F31FD39000F8E53 /* SQRPlayerItemCacheTask.m in Sources */,
-				D92806F01F31FD39000F8E53 /* SQRPlayerItemRemoteCacheTask.m in Sources */,
-				D92806EC1F31FD39000F8E53 /* SQRPlayerItemCacheFile.m in Sources */,
-				D92806EA1F31FD39000F8E53 /* AVPlayerItem+SQRCacheSupport.m in Sources */,
 				D92806C11F31FD29000F8E53 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D9079A8D21C8E88F0020CBB6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D9079A3521C8DDF70020CBB6 /* SQRAudioPlayer */;
+			targetProxy = D9079A8C21C8E88F0020CBB6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D92806C81F31FD29000F8E53 /* Main.storyboard */ = {
@@ -262,6 +380,86 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D9079A3F21C8DDF70020CBB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L5GZZ68F2C;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = SQRAudioPlayer/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hwh.SQRAudioPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D9079A4021C8DDF70020CBB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = L5GZZ68F2C;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = SQRAudioPlayer/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hwh.SQRAudioPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		D92806D11F31FD29000F8E53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -358,6 +556,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = L5GZZ68F2C;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					SQRPlayer_LOG,
@@ -371,6 +570,7 @@
 				INFOPLIST_FILE = SQRAudioPlayerDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tbreader.SQRAudioPlayerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -380,10 +580,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = L5GZZ68F2C;
 				INFOPLIST_FILE = SQRAudioPlayerDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tbreader.SQRAudioPlayerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -392,6 +594,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D9079A4121C8DDF70020CBB6 /* Build configuration list for PBXNativeTarget "SQRAudioPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9079A3F21C8DDF70020CBB6 /* Debug */,
+				D9079A4021C8DDF70020CBB6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D92806B71F31FD29000F8E53 /* Build configuration list for PBXProject "SQRAudioPlayerDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0830"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D92806BB1F31FD29000F8E53"
-               BuildableName = "SQRAudioPlayerDemo.app"
-               BlueprintName = "SQRAudioPlayerDemo"
+               BlueprintIdentifier = "D9079A3521C8DDF70020CBB6"
+               BuildableName = "SQRAudioPlayer.framework"
+               BlueprintName = "SQRAudioPlayer"
                ReferencedContainer = "container:SQRAudioPlayerDemo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,15 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D92806BB1F31FD29000F8E53"
-            BuildableName = "SQRAudioPlayerDemo.app"
-            BlueprintName = "SQRAudioPlayerDemo"
-            ReferencedContainer = "container:SQRAudioPlayerDemo.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -51,29 +42,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D92806BB1F31FD29000F8E53"
-            BuildableName = "SQRAudioPlayerDemo.app"
-            BlueprintName = "SQRAudioPlayerDemo"
+            BlueprintIdentifier = "D9079A3521C8DDF70020CBB6"
+            BuildableName = "SQRAudioPlayer.framework"
+            BlueprintName = "SQRAudioPlayer"
             ReferencedContainer = "container:SQRAudioPlayerDemo.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "OS_ACTIVITY_MODE"
-            value = "disable"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
+      </MacroExpansion>
       <AdditionalOptions>
-         <AdditionalOption
-            key = "NSZombieEnabled"
-            value = "YES"
-            isEnabled = "YES">
-         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
@@ -82,16 +60,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D92806BB1F31FD29000F8E53"
-            BuildableName = "SQRAudioPlayerDemo.app"
-            BlueprintName = "SQRAudioPlayerDemo"
+            BlueprintIdentifier = "D9079A3521C8DDF70020CBB6"
+            BuildableName = "SQRAudioPlayer.framework"
+            BlueprintName = "SQRAudioPlayer"
             ReferencedContainer = "container:SQRAudioPlayerDemo.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

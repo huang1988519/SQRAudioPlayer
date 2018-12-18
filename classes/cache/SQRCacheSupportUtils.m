@@ -171,7 +171,7 @@ const NSRange MCInvalidRange = {NSNotFound,0};
     CFStringRef contentType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)(mimeType), NULL);
     self.contentInformationRequest.byteRangeAccessSupported = [response mc_supportRange];
     self.contentInformationRequest.contentType = CFBridgingRelease(contentType);
-    self.contentInformationRequest.contentLength = [response mc_fileLength];
+    self.contentInformationRequest.contentLength = [response mc_fileLength];    
 }
 @end
 

@@ -1,0 +1,435 @@
+BCSymbolMap Version: 2.0
++[AVPlayerItem(SQRCacheSupport) mc_errorWithCode:reason:]
++[AVPlayerItem(SQRCacheSupport) mc_checkURL:]
++[AVPlayerItem(SQRCacheSupport) mc_playerItemWithRemoteURL:error:]
++[AVPlayerItem(SQRCacheSupport) mc_playerItemWithRemoteURL:options:error:]
++[AVPlayerItem(SQRCacheSupport) mc_playerItemWithRemoteURL:options:cacheFilePath:error:]
++[AVPlayerItem(SQRCacheSupport) mc_removeCacheWithCacheFilePath:]
++[AVPlayerItem(SQRCacheSupport) removeExpireFiles:beforeTime:]
++[AVPlayerItem(SQRCacheSupport) removeAllAudioCache]
+-[AVPlayerItem(SQRCacheSupport) mc_cacheLoader]
+-[AVPlayerItem(SQRCacheSupport) mc_URL]
+-[AVPlayerItem(SQRCacheSupport) mc_cacheFilePath]
+-[AVPlayerItem(SQRCacheSupport) setAssetLoaded:]
+-[AVPlayerItem(SQRCacheSupport) assetLoaded]
+_kAVPlayerItemMCCacheSupportCacheLoaderKey
+_kAVPlayerItemAssetHaveLoadedKey
+Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/AVPlayerItem+SQRCacheSupport.m
+/Users/hwh/Code/Project/SQRAudioPlayer/SQRAudioPlayerDemo
+MCCacheTemporaryDirectory
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRCacheSupportUtils.h
+-[NSString(MCCacheSupport) mc_md5]
+-[NSString(MCCacheSupport) mc_isM3U]
+-[NSURL(MCCacheSupport) mc_URLByReplacingSchemeWithString:]
+-[NSURL(MCCacheSupport) mc_avplayerCacheSupportURL]
+-[NSURL(MCCacheSupport) mc_avplayerOriginalURL]
+-[NSURL(MCCacheSupport) mc_isAvPlayerCacheSupportURL]
+-[NSURL(MCCacheSupport) mc_pathComponentRelativeToURL:]
+-[NSURL(MCCacheSupport) mc_isM3U]
+-[NSURLRequest(MCCacheSupport) mc_range]
+-[NSHTTPURLResponse(MCCacheSupport) mc_fileLength]
+-[NSHTTPURLResponse(MCCacheSupport) mc_supportRange]
+-[AVAssetResourceLoadingRequest(MCCacheSupport) mc_fillContentInformation:]
+-[NSFileHandle(MCCacheSupport) mc_safeWriteData:]
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRCacheSupportUtils.m
++[SQRPlayerItemCacheFile cacheFileWithFilePath:]
+-[SQRPlayerItemCacheFile initWithFilePath:]
++[SQRPlayerItemCacheFile indexFileExtension]
+-[SQRPlayerItemCacheFile dealloc]
+-[SQRPlayerItemCacheFile serializeIndex:]
+-[SQRPlayerItemCacheFile unserializeIndex]
+-[SQRPlayerItemCacheFile synchronize]
+-[SQRPlayerItemCacheFile cachedDataBound]
+-[SQRPlayerItemCacheFile isFileLengthValid]
+-[SQRPlayerItemCacheFile isCompeleted]
+-[SQRPlayerItemCacheFile isEof]
+-[SQRPlayerItemCacheFile mergeRanges]
+-[SQRPlayerItemCacheFile addRange:]
+-[SQRPlayerItemCacheFile cachedRangeForRange:]
+-[SQRPlayerItemCacheFile cachedRangeContainsPosition:]
+-[SQRPlayerItemCacheFile firstNotCachedRangeFromPosition:]
+-[SQRPlayerItemCacheFile checkCompelete]
+-[SQRPlayerItemCacheFile truncateFileWithFileLength:]
+-[SQRPlayerItemCacheFile removeCache]
+-[SQRPlayerItemCacheFile setResponse:]
+-[SQRPlayerItemCacheFile saveData:atOffset:synchronize:]
+-[SQRPlayerItemCacheFile dataWithRange:]
+-[SQRPlayerItemCacheFile readDataWithLength:]
+-[SQRPlayerItemCacheFile seekToPosition:]
+-[SQRPlayerItemCacheFile seekToEnd]
+-[SQRPlayerItemCacheFile cacheFilePath]
+-[SQRPlayerItemCacheFile indexFilePath]
+-[SQRPlayerItemCacheFile fileLength]
+-[SQRPlayerItemCacheFile readOffset]
+-[SQRPlayerItemCacheFile responseHeaders]
+-[SQRPlayerItemCacheFile ranges]
+-[SQRPlayerItemCacheFile setRanges:]
+-[SQRPlayerItemCacheFile writeFileHandle]
+-[SQRPlayerItemCacheFile setWriteFileHandle:]
+-[SQRPlayerItemCacheFile readFileHandle]
+-[SQRPlayerItemCacheFile setReadFileHandle:]
+-[SQRPlayerItemCacheFile .cxx_destruct]
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._cacheFilePath
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._indexFilePath
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._recieveMaxCount
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._fileLength
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._responseHeaders
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._compelete
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._readOffset
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._ranges
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._writeFileHandle
+_OBJC_IVAR_$_SQRPlayerItemCacheFile._readFileHandle
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemCacheFile.m
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemCacheFile.h
+MCValidFileRange
+NSMakeRange
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSRange.h
+NSMaxRange
+NSLocationInRange
+MCRangeCanMerge
++[SQRPlayerItemCacheLoader cacheLoaderWithCacheFilePath:]
+-[SQRPlayerItemCacheLoader initWithCacheFilePath:]
+-[SQRPlayerItemCacheLoader dealloc]
+-[SQRPlayerItemCacheLoader clear]
+-[SQRPlayerItemCacheLoader cacheFilePath]
++[SQRPlayerItemCacheLoader removeCacheWithCacheFilePath:]
++[SQRPlayerItemCacheLoader removeExpireFiles:beforeTime:]
+___57+[SQRPlayerItemCacheLoader removeExpireFiles:beforeTime:]_block_invoke
++[SQRPlayerItemCacheLoader removeAllAudioCache]
+-[SQRPlayerItemCacheLoader startNextRequest]
+-[SQRPlayerItemCacheLoader startCurrentRequest]
+-[SQRPlayerItemCacheLoader completeRequest:task:]
+-[SQRPlayerItemCacheLoader cleanUpCurrentRequest]
+-[SQRPlayerItemCacheLoader addTaskWithRange:cached:]
+___52-[SQRPlayerItemCacheLoader addTaskWithRange:cached:]_block_invoke
+___copy_helper_block_
+___destroy_helper_block_
+-[SQRPlayerItemCacheLoader keyForLoadingRequest:]
+-[SQRPlayerItemCacheLoader addTaskQueue:]
+-[SQRPlayerItemCacheLoader removeTaskQueue:]
+-[SQRPlayerItemCacheLoader queueForRequest:]
+-[SQRPlayerItemCacheLoader cancelAllQueue]
+-[SQRPlayerItemCacheLoader resourceLoader:shouldWaitForLoadingOfRequestedResource:]
+-[SQRPlayerItemCacheLoader resourceLoader:didCancelLoadingRequest:]
+-[SQRPlayerItemCacheLoader queues]
+-[SQRPlayerItemCacheLoader setQueues:]
+-[SQRPlayerItemCacheLoader cacheFile]
+-[SQRPlayerItemCacheLoader setCacheFile:]
+-[SQRPlayerItemCacheLoader singleQueue]
+-[SQRPlayerItemCacheLoader setSingleQueue:]
+-[SQRPlayerItemCacheLoader .cxx_destruct]
+_OBJC_IVAR_$_SQRPlayerItemCacheLoader._queues
+_OBJC_IVAR_$_SQRPlayerItemCacheLoader._pendingRequests
+_OBJC_IVAR_$_SQRPlayerItemCacheLoader._currentDataRange
+_OBJC_IVAR_$_SQRPlayerItemCacheLoader._singleQueue
+___block_descriptor_tmp
+___block_literal_global
+_OBJC_IVAR_$_SQRPlayerItemCacheLoader._currentRequest
+_OBJC_IVAR_$_SQRPlayerItemCacheLoader._response
+___block_descriptor_tmp.160
+_OBJC_IVAR_$_SQRPlayerItemCacheLoader._cacheFile
+l_OBJC_PROTOCOL_$_NSObject
+l_OBJC_LABEL_PROTOCOL_$_NSObject
+l_OBJC_PROTOCOL_$_NSURLConnectionDelegate
+l_OBJC_LABEL_PROTOCOL_$_NSURLConnectionDelegate
+l_OBJC_PROTOCOL_$_NSURLConnectionDataDelegate
+l_OBJC_LABEL_PROTOCOL_$_NSURLConnectionDataDelegate
+l_OBJC_PROTOCOL_$_AVAssetResourceLoaderDelegate
+l_OBJC_LABEL_PROTOCOL_$_AVAssetResourceLoaderDelegate
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemCacheLoader.m
+__destroy_helper_block_
+__copy_helper_block_
+__52-[SQRPlayerItemCacheLoader addTaskWithRange:cached:]_block_invoke
+MCRangeToHTTPRangeReponseHeader
+MCValidByteRange
+__57+[SQRPlayerItemCacheLoader removeExpireFiles:beforeTime:]_block_invoke
+-[SQRPlayerItemCacheTask initWithCacheFile:loadingRequest:range:]
+-[SQRPlayerItemCacheTask main]
+-[SQRPlayerItemCacheTask setFinished:]
+-[SQRPlayerItemCacheTask setExecuting:]
+-[SQRPlayerItemCacheTask sqr_cancel]
+-[SQRPlayerItemCacheTask isExecuting]
+-[SQRPlayerItemCacheTask isFinished]
+-[SQRPlayerItemCacheTask finishBlock]
+-[SQRPlayerItemCacheTask setFinishBlock:]
+-[SQRPlayerItemCacheTask loadingRequest]
+-[SQRPlayerItemCacheTask setLoadingRequest:]
+-[SQRPlayerItemCacheTask .cxx_destruct]
+_OBJC_IVAR_$_SQRPlayerItemCacheTask._loadingRequest
+_OBJC_IVAR_$_SQRPlayerItemCacheTask._finishBlock
+_OBJC_IVAR_$_SQRPlayerItemCacheTask._finished
+_OBJC_IVAR_$_SQRPlayerItemCacheTask._executing
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemCacheTask.m
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemCacheTask.h
+-[SQRPlayerItemLocalCacheTask main]
+-[SQRPlayerItemLocalCacheTask handleFinished]
+-[SQRPlayerItemLocalCacheTask setFinished:]
+-[SQRPlayerItemLocalCacheTask setExecuting:]
+-[SQRPlayerItemLocalCacheTask dealloc]
+-[SQRPlayerItemLocalCacheTask isExecuting]
+-[SQRPlayerItemLocalCacheTask isFinished]
+_OBJC_IVAR_$_SQRPlayerItemLocalCacheTask._finished
+_OBJC_IVAR_$_SQRPlayerItemLocalCacheTask._executing
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemLocalCacheTask.m
++[SQRPlayer(Thead) networkRequestTheadEntryPoint:]
++[SQRPlayer(Thead) stopNetworkRequestThead:]
++[SQRPlayer(Thead) connectThead]
+___32+[SQRPlayer(Thead) connectThead]_block_invoke
+-[SQRPlayerItemRemoteCacheTask initWithCacheFile:loadingRequest:range:]
+-[SQRPlayerItemRemoteCacheTask main]
+-[SQRPlayerItemRemoteCacheTask dealloc]
+-[SQRPlayerItemRemoteCacheTask suspended:]
+-[SQRPlayerItemRemoteCacheTask handleFinished]
+-[SQRPlayerItemRemoteCacheTask startURLRequestWithRequest:range:]
+-[SQRPlayerItemRemoteCacheTask _startWithRequest:]
+-[SQRPlayerItemRemoteCacheTask synchronizeCacheFileIfNeeded]
+-[SQRPlayerItemRemoteCacheTask startRunLoop]
+-[SQRPlayerItemRemoteCacheTask stopRunLoop]
+-[SQRPlayerItemRemoteCacheTask sqr_cancel]
+-[SQRPlayerItemRemoteCacheTask allowAccessNetwork]
+-[SQRPlayerItemRemoteCacheTask _setNetworkActive:]
+___50-[SQRPlayerItemRemoteCacheTask _setNetworkActive:]_block_invoke
+-[SQRPlayerItemRemoteCacheTask connection:willSendRequest:redirectResponse:]
+-[SQRPlayerItemRemoteCacheTask connection:didReceiveResponse:]
+-[SQRPlayerItemRemoteCacheTask connection:didReceiveData:]
+-[SQRPlayerItemRemoteCacheTask connectionDidFinishLoading:]
+-[SQRPlayerItemRemoteCacheTask connection:didFailWithError:]
+-[SQRPlayerItemRemoteCacheTask setFinished:]
+-[SQRPlayerItemRemoteCacheTask setExecuting:]
+-[SQRPlayerItemRemoteCacheTask isExecuting]
+-[SQRPlayerItemRemoteCacheTask isFinished]
+-[SQRPlayerItemRemoteCacheTask response]
+-[SQRPlayerItemRemoteCacheTask setResponse:]
+-[SQRPlayerItemRemoteCacheTask curThread]
+-[SQRPlayerItemRemoteCacheTask setCurThread:]
+-[SQRPlayerItemRemoteCacheTask .cxx_destruct]
+__playerDownloadThread
+_SQRPlayerThreadActive
+_connectThead.onceToken
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask.retryCount
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask.retryInterval
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._offset
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._connection
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._error
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._requestLength
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._response
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._dataSaved
+l_OBJC_PROTOCOL_$_SQRPlayerNetworkChangedProtocol
+l_OBJC_LABEL_PROTOCOL_$_SQRPlayerNetworkChangedProtocol
+l_OBJC_PROTOCOL_REFERENCE_$_SQRPlayerNetworkChangedProtocol
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._finished
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._executing
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._curThread
+_OBJC_IVAR_$_SQRPlayerItemRemoteCacheTask._runloop
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemRemoteCacheTask.m
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerItemRemoteCacheTask.h
+sqr_errorWithCode
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/SQRMediaPlayer.h
+__50-[SQRPlayerItemRemoteCacheTask _setNetworkActive:]_block_invoke
+MCRangeToHTTPRangeHeader
+__32+[SQRPlayer(Thead) connectThead]_block_invoke
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk/usr/include/dispatch/once.h
++[SQRPlayerHandlerFactory share]
+___32+[SQRPlayerHandlerFactory share]_block_invoke
++[SQRPlayerHandlerFactory resisterHandler:protocol:]
++[SQRPlayerHandlerFactory hanlerForProtocol:]
+-[SQRPlayerHandlerFactory handlesTable]
+-[SQRPlayerHandlerFactory setHandlesTable:]
+-[SQRPlayerHandlerFactory .cxx_destruct]
+_share._sharInstance
+_share.onceToken
+_OBJC_IVAR_$_SQRPlayerHandlerFactory._handlesTable
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/cache/SQRPlayerHandlerFactory.m
+__32+[SQRPlayerHandlerFactory share]_block_invoke
+-[SQRMediaItem init]
+-[SQRMediaItem dealloc]
+-[SQRMediaItem retryNext]
+-[SQRMediaItem currentUrl]
+-[SQRMediaItem retryIndex]
+-[SQRMediaItem assetUrls]
+-[SQRMediaItem setAssetUrls:]
+-[SQRMediaItem title]
+-[SQRMediaItem setTitle:]
+-[SQRMediaItem artist]
+-[SQRMediaItem setArtist:]
+-[SQRMediaItem albumTitle]
+-[SQRMediaItem setAlbumTitle:]
+-[SQRMediaItem artworkImage]
+-[SQRMediaItem setArtworkImage:]
+-[SQRMediaItem .cxx_destruct]
+_OBJC_IVAR_$_SQRMediaItem._retryIndex
+_OBJC_IVAR_$_SQRMediaItem._assetUrls
+_OBJC_IVAR_$_SQRMediaItem._title
+_OBJC_IVAR_$_SQRMediaItem._artist
+_OBJC_IVAR_$_SQRMediaItem._albumTitle
+_OBJC_IVAR_$_SQRMediaItem._artworkImage
+_OBJC_IVAR_$_SQRMediaItem._currentURL
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/SQRMediaItem.m
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/SQRMediaItem.h
++[SQRPlayer sharePlayer]
+___24+[SQRPlayer sharePlayer]_block_invoke
+-[SQRPlayer init]
+-[SQRPlayer dealloc]
+-[SQRPlayer errorWithMesssage:code:]
+-[SQRPlayer loadAssetValues:complete:]
+___38-[SQRPlayer loadAssetValues:complete:]_block_invoke
+___38-[SQRPlayer loadAssetValues:complete:]_block_invoke_2
+___copy_helper_block_.97
+___destroy_helper_block_.98
+___copy_helper_block_.100
+___destroy_helper_block_.101
+-[SQRPlayer addPlayItem:]
+-[SQRPlayer removePlayItemAt:]
+-[SQRPlayer replaceMediaAtIndex:index:]
+-[SQRPlayer setQueue:]
+-[SQRPlayer queue]
+-[SQRPlayer removeAllQueue]
+-[SQRPlayer removePreloadAsset]
+-[SQRPlayer prepareToPlay:complete:]
+-[SQRPlayer loadAssetIfNecessary]
+___33-[SQRPlayer loadAssetIfNecessary]_block_invoke
+___33-[SQRPlayer loadAssetIfNecessary]_block_invoke_2
+___copy_helper_block_.183
+___destroy_helper_block_.184
+___copy_helper_block_.186
+___destroy_helper_block_.187
+-[SQRPlayer cancelRequests]
+-[SQRPlayer resumeRequests]
+-[SQRPlayer bufferCompleteWithUrl:]
+-[SQRPlayer playMedia:]
+___23-[SQRPlayer playMedia:]_block_invoke
+___copy_helper_block_.206
+___destroy_helper_block_.207
+-[SQRPlayer playNextItem]
+-[SQRPlayer playPreviouseItem]
+-[SQRPlayer currentItem]
+-[SQRPlayer playMeidaAtIndex:]
+-[SQRPlayer play]
+-[SQRPlayer startCheckTimer]
+-[SQRPlayer stopCheckTimer]
+-[SQRPlayer checkResourcesIsReady]
+-[SQRPlayer tryToPlayIfStalled]
+-[SQRPlayer timeBuffered]
+-[SQRPlayer pause]
+-[SQRPlayer stop]
+-[SQRPlayer clear]
+-[SQRPlayer seekTo:]
+___20-[SQRPlayer seekTo:]_block_invoke
+___copy_helper_block_.261
+___destroy_helper_block_.262
+___20-[SQRPlayer seekTo:]_block_invoke.267
+___copy_helper_block_.270
+___destroy_helper_block_.271
+-[SQRPlayer refreshLockInfo:]
+-[SQRPlayer startBuffering]
+-[SQRPlayer endBuffering]
+-[SQRPlayer setCurrentState:]
+-[SQRPlayer updatLockScreenInfo:]
+___33-[SQRPlayer updatLockScreenInfo:]_block_invoke
+___copy_helper_block_.318
+___destroy_helper_block_.319
+-[SQRPlayer recieveInvalidResponse:]
+-[SQRPlayer addObserves]
+-[SQRPlayer removeObservers]
+-[SQRPlayer addPlayerItemObservers]
+-[SQRPlayer removePlayerItemObservers]
+-[SQRPlayer addTimeObserver]
+___28-[SQRPlayer addTimeObserver]_block_invoke
+___copy_helper_block_.334
+___destroy_helper_block_.335
+-[SQRPlayer removeTimeObserver]
+-[SQRPlayer addPlayItemNotifcation]
+-[SQRPlayer removePlayItemNotifcation]
+-[SQRPlayer addAudioSessionNotification]
+-[SQRPlayer removeAudioSessionNotification]
+-[SQRPlayer audioSessionInterrupted:]
+-[SQRPlayer audioSessionChangeRoute:]
+-[SQRPlayer playerItemDidReachEnd:]
+-[SQRPlayer playitemPlayDidStalled:]
+-[SQRPlayer playerFailedToEnd:]
+-[SQRPlayer currentPlaybackTime]
+-[SQRPlayer currentPlaybackDuration]
+-[SQRPlayer observeValueForKeyPath:ofObject:change:context:]
+___60-[SQRPlayer observeValueForKeyPath:ofObject:change:context:]_block_invoke
+___copy_helper_block_.388
+___destroy_helper_block_.389
++[SQRPlayer assetKeysRequiredToPlay]
+-[SQRPlayer syncPlayProcess:]
+-[SQRPlayer delegate]
+-[SQRPlayer setDelegate:]
+-[SQRPlayer playbackState]
+-[SQRPlayer player]
+-[SQRPlayer setPlayer:]
+-[SQRPlayer setCurrentItem:]
+-[SQRPlayer loadingPlayItem]
+-[SQRPlayer setLoadingPlayItem:]
+-[SQRPlayer checkTimer]
+-[SQRPlayer setCheckTimer:]
+-[SQRPlayer playItemQueue]
+-[SQRPlayer setPlayItemQueue:]
+-[SQRPlayer cacheMaxCount]
+-[SQRPlayer setCacheMaxCount:]
+-[SQRPlayer expireTime]
+-[SQRPlayer setExpireTime:]
+-[SQRPlayer readyHandle]
+-[SQRPlayer setReadyHandle:]
+-[SQRPlayer curAssetLoaded]
+-[SQRPlayer setCurAssetLoaded:]
+-[SQRPlayer seeking]
+-[SQRPlayer setSeeking:]
+-[SQRPlayer .cxx_destruct]
++[SQRPlayer(Handler) registHandler:protocol:]
+-[SQRPlayer(Cache) setCacheMaxCount:expireTime:]
+-[SQRPlayer(Cache) removeAllCache]
++[SQRPlayer(Logger) descriptionForState:]
+_sharePlayer.onceToken
+_instancePlayer
+_OBJC_IVAR_$_SQRPlayer._playingIndex
+_OBJC_IVAR_$_SQRPlayer._interrupt
+_OBJC_IVAR_$_SQRPlayer._seeking
+_OBJC_IVAR_$_SQRPlayer._player
+_kSQRAudioControllerPlayStateObservationContext
+_OBJC_IVAR_$_SQRPlayer._playItemQueue
+_OBJC_IVAR_$_SQRPlayer._cacheMaxCount
+_OBJC_IVAR_$_SQRPlayer._expireTime
+_OBJC_IVAR_$_SQRPlayer._loadingPlayItem
+___block_descriptor_tmp.99
+___block_descriptor_tmp.102
+_OBJC_IVAR_$_SQRPlayer._currentItem
+_OBJC_IVAR_$_SQRPlayer._cacheLoaderCanceled
+___block_descriptor_tmp.185
+___block_descriptor_tmp.188
+___block_descriptor_tmp.209
+_OBJC_IVAR_$_SQRPlayer._playbackState
+_OBJC_IVAR_$_SQRPlayer._isStalled
+_emptyBufferRetryCount
+___block_descriptor_tmp.264
+___block_descriptor_tmp.272
+_OBJC_IVAR_$_SQRPlayer._buffering
+___block_descriptor_tmp.321
+_kSQRAudioControllerBufferingObservationContext
+_kSQRAudioControllerPlayItemBufferObservationContext
+_kSQRAudioControllerPlayItemLikeKeeyupObservationContext
+_kSQRAudioControllerPlayItemStatusObservationContext
+_OBJC_IVAR_$_SQRPlayer._timeObserver
+___block_descriptor_tmp.337
+_OBJC_IVAR_$_SQRPlayer._delegate
+___block_descriptor_tmp.390
+_OBJC_IVAR_$_SQRPlayer._checkTimer
+_OBJC_IVAR_$_SQRPlayer._readyHandle
+_OBJC_IVAR_$_SQRPlayer._curAssetLoaded
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/SQRPlayer.m
+/Users/hwh/Code/Project/SQRAudioPlayer/classes/SQRPlayer.h
+__60-[SQRPlayer observeValueForKeyPath:ofObject:change:context:]_block_invoke
+__28-[SQRPlayer addTimeObserver]_block_invoke
+__33-[SQRPlayer updatLockScreenInfo:]_block_invoke
+__20-[SQRPlayer seekTo:]_block_invoke.267
+__20-[SQRPlayer seekTo:]_block_invoke
+__23-[SQRPlayer playMedia:]_block_invoke
+__33-[SQRPlayer loadAssetIfNecessary]_block_invoke_2
+__33-[SQRPlayer loadAssetIfNecessary]_block_invoke
+__38-[SQRPlayer loadAssetValues:complete:]_block_invoke_2
+__38-[SQRPlayer loadAssetValues:complete:]_block_invoke
+__24+[SQRPlayer sharePlayer]_block_invoke
+/Users/hwh/Library/Developer/Xcode/DerivedData/SQRAudioPlayerDemo-aytelfcbbgvanqccnhaswbdcfdrn/Build/Intermediates.noindex/ArchiveIntermediates/SQRAudioPlayer/IntermediateBuildFilesPath/SQRAudioPlayerDemo.build/Release-iphoneos/SQRAudioPlayer.build/DerivedSources/SQRAudioPlayer_vers.c
