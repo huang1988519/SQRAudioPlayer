@@ -20,6 +20,17 @@
 		D9079AAC21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9F21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m */; };
 		D9079AAD21C8E8FF0020CBB6 /* SQRPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA121C8E8FF0020CBB6 /* SQRPlayer.m */; };
 		D9079AAE21C8E8FF0020CBB6 /* SQRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA421C8E8FF0020CBB6 /* SQRMediaItem.m */; };
+		D9079ABF21C8EDCD0020CBB6 /* SQRMediaPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = D9079AA221C8E8FF0020CBB6 /* SQRMediaPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9079AC021C8EDE50020CBB6 /* SQRPlayerItemLocalCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9121C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m */; };
+		D9079AC121C8EDE50020CBB6 /* SQRPlayerItemRemoteCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9721C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m */; };
+		D9079AC221C8EDE50020CBB6 /* SQRCacheSupportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9821C8E8FF0020CBB6 /* SQRCacheSupportUtils.m */; };
+		D9079AC321C8EDE50020CBB6 /* SQRPlayerHandlerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9A21C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.m */; };
+		D9079AC421C8EDE50020CBB6 /* SQRPlayerItemCacheFile.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9B21C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m */; };
+		D9079AC521C8EDE50020CBB6 /* SQRPlayerItemCacheLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9C21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m */; };
+		D9079AC621C8EDE50020CBB6 /* AVPlayerItem+SQRCacheSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9D21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m */; };
+		D9079AC721C8EDE50020CBB6 /* SQRPlayerItemCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9F21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m */; };
+		D9079AC821C8EDE50020CBB6 /* SQRPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA121C8E8FF0020CBB6 /* SQRPlayer.m */; };
+		D9079AC921C8EDE50020CBB6 /* SQRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079AA421C8E8FF0020CBB6 /* SQRMediaItem.m */; };
 		D92806C11F31FD29000F8E53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C01F31FD29000F8E53 /* main.m */; };
 		D92806C41F31FD29000F8E53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C31F31FD29000F8E53 /* AppDelegate.m */; };
 		D92806C71F31FD29000F8E53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D92806C61F31FD29000F8E53 /* ViewController.m */; };
@@ -218,6 +229,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9079ABF21C8EDCD0020CBB6 /* SQRMediaPlayer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +339,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9079AC021C8EDE50020CBB6 /* SQRPlayerItemLocalCacheTask.m in Sources */,
+				D9079AC121C8EDE50020CBB6 /* SQRPlayerItemRemoteCacheTask.m in Sources */,
+				D9079AC221C8EDE50020CBB6 /* SQRCacheSupportUtils.m in Sources */,
+				D9079AC321C8EDE50020CBB6 /* SQRPlayerHandlerFactory.m in Sources */,
+				D9079AC421C8EDE50020CBB6 /* SQRPlayerItemCacheFile.m in Sources */,
+				D9079AC521C8EDE50020CBB6 /* SQRPlayerItemCacheLoader.m in Sources */,
+				D9079AC621C8EDE50020CBB6 /* AVPlayerItem+SQRCacheSupport.m in Sources */,
+				D9079AC721C8EDE50020CBB6 /* SQRPlayerItemCacheTask.m in Sources */,
+				D9079AC821C8EDE50020CBB6 /* SQRPlayer.m in Sources */,
+				D9079AC921C8EDE50020CBB6 /* SQRMediaItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
