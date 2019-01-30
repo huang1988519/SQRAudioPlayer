@@ -8,58 +8,12 @@
 #import "SQRCacheSupportUtils.h"
 #import "SQRMediaPlayer.h"
 #import "SQRPlayerHandlerFactory.h"
+#import "SQRDataDownloader.h"
 
 /**
  * 音频网络 所使用线程管理，以防线程被释放而无法正确回调
  */
-@implementation SQRPlayer (Thead)
-
-/// 音频网络下载所在线程
-static NSThread * _playerDownloadThread = nil;
-/// 音频网络下载所在线程 状态
-static bool SQRPlayerThreadActive = false;
-
-+ (void)networkRequestTheadEntryPoint:(BOOL)__unused active {
-    @autoreleasepool {
-        [[NSThread currentThread] setName:@"com.hwh.player.cacheloaderThead"];
-        
-        NSRunLoop * runloop = [NSRunLoop currentRunLoop];
-//        [runloop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
-//        [runloop run];
-        while (SQRPlayerThreadActive && [runloop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]]);
-    }
-}
-
-+ (void)stopNetworkRequestThead:(id)__unused obj {
-    @autoreleasepool {
-        SQRPlayerThreadActive = false;
-        /*
-        NSRunLoop * runloop = [NSRunLoop currentRunLoop];
-        CFRunLoopRef curRunloop = runloop.getCFRunLoop;
-        CFRunLoopStop(curRunloop);
-         */
-    }
-}
-/**
- 创建网络请求时所在线程
- 
- @return 网络请求所在线程
- */
-+ (NSThread *)connectThead {
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        SQRPlayerThreadActive = true;
-        
-        _playerDownloadThread = [[NSThread alloc] initWithTarget:self.class selector:@selector(networkRequestTheadEntryPoint:) object:nil];
-        [_playerDownloadThread start];
-    });
-    return _playerDownloadThread;
-}
-
-@end
-
-@interface SQRPlayerItemRemoteCacheTask ()<NSURLConnectionDataDelegate>
+@interface SQRPlayerItemRemoteCacheTask ()
 {
 @private
     NSUInteger _offset;
@@ -67,7 +21,6 @@ static bool SQRPlayerThreadActive = false;
     
     NSError *_error;
     
-    NSURLConnection *_connection;
     BOOL _dataSaved;
     
     CFRunLoopRef _runloop;
@@ -79,6 +32,7 @@ static bool SQRPlayerThreadActive = false;
 @property (assign, nonatomic, getter = isExecuting) BOOL executing;
 @property (assign, nonatomic, getter = isFinished) BOOL finished;
 @property (weak,   nonatomic) NSThread * curThread;
+@property (strong, nonatomic) NSURLSessionDataTask *task;
 @end
 
 @implementation SQRPlayerItemRemoteCacheTask
@@ -93,10 +47,14 @@ static bool SQRPlayerThreadActive = false;
         retryInterval = 5;
         
         _offset = 0;
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+           
+        });
     }
     return self;
 }
-
 
 - (void)main
 {
@@ -120,13 +78,14 @@ static bool SQRPlayerThreadActive = false;
 }
 
 -(void)dealloc {
-    LOG_I(@"释放 SQRPlayerItemRemoteCacheTask",nil);
-    [_connection cancel];
-    [self stopRunLoop];
+    LOG_I(@"释放 Remote Task: %@",NSStringFromRange(_range));
+    [_task cancel];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)suspended:(NSNotification *)notification {
+    LOG_I(@"暂停任务: %@",NSStringFromRange(_range));
+
     if ([self isCancelled]) {
         [self handleFinished];
         return;
@@ -135,10 +94,9 @@ static bool SQRPlayerThreadActive = false;
     NSDictionary * userinfo = notification.userInfo;
     BOOL canced = [userinfo[@"cancel"] boolValue];
     if (canced) {
-        [_connection cancel];
+        [_task cancel];
     }else {
         if ([self allowAccessNetwork] && retryCount <= 0) {
-            NSAssert(_runloop == CFRunLoopGetCurrent(), @"之前线程和当前不一致");
             retryCount = 5;
             NSRange newRange = NSMakeRange(_offset, NSMaxRange(_range) - _offset);
             [self startURLRequestWithRequest:self.loadingRequest range:newRange];
@@ -150,8 +108,8 @@ static bool SQRPlayerThreadActive = false;
 {
     [self _setNetworkActive:NO];
 
-    if (_connection) {
-        [_connection cancel];
+    if (_task) {
+        [_task cancel];
     }
     
     if (!self.loadingRequest) {
@@ -159,21 +117,18 @@ static bool SQRPlayerThreadActive = false;
     }
     if (self.finishBlock && self.loadingRequest)
     {
-        LOG_I(@"远程任务已完成",nil);
         self.finishBlock(self,_error);
     }
-    
-    [self stopRunLoop];
-    
+
     [self setExecuting:NO];
     [self setFinished:YES];
 }
 
 - (void)startURLRequestWithRequest:(AVAssetResourceLoadingRequest *)loadingRequest range:(NSRange)range
 {
-    if (_connection) {
-        [_connection cancel];
-        _connection = nil;
+    if (_task) {
+        [_task cancel];
+        _task = nil;
     }
     
     LOG_E(@"网络请求剩余次数 %d",(int)retryCount);
@@ -191,14 +146,13 @@ static bool SQRPlayerThreadActive = false;
         NSString *rangeValue = MCRangeToHTTPRangeHeader(range);
         if (rangeValue)
         {
+            LOG_I(@"补充Range信息: %@",rangeValue);
             [urlRequest setValue:rangeValue forHTTPHeaderField:@"Range"];
             _offset = range.location;
             _requestLength = range.length;
         }
     }
-    
-    [self performSelector:@selector(_startWithRequest:) onThread:[SQRPlayer connectThead] withObject:urlRequest waitUntilDone:NO];
-    [self startRunLoop];
+    [self _startWithRequest:urlRequest];
 }
 
 - (void)_startWithRequest:(NSURLRequest *)request {
@@ -206,8 +160,9 @@ static bool SQRPlayerThreadActive = false;
         LOG_E(@"传入请求错误",nil);
         return;
     }
-    _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-    [_connection start];
+    _task = [[[SQRDataDownloader sharedInstance] session] dataTaskWithRequest:request];
+    [[SQRDataDownloader sharedInstance] setObject:self forKey:_task];
+    [_task resume];
 }
 
 - (void)synchronizeCacheFileIfNeeded
@@ -218,39 +173,8 @@ static bool SQRPlayerThreadActive = false;
     }
 }
 
-- (void)startRunLoop
-{
-    
-    return;
-    
-    NSAssert(_runloop == CFRunLoopGetCurrent(), @"之前线程和当前不一致");
-
-    if (_runloop) {
-        return;
-    }
-    
-    _curThread = [NSThread currentThread];
-    _runloop = CFRunLoopGetCurrent();
-    CFRunLoopRun();
-}
-
-- (void)stopRunLoop
-{
-    return;
-    
-    NSAssert(_runloop == CFRunLoopGetCurrent(), @"之前线程和当前不一致");
-    
-    if (_runloop && _curThread)
-    {
-        NSAssert(_curThread, @"当前线程已不存在");
-        CFRunLoopStop(_runloop);
-        _runloop = nil;
-    }
-}
-
 -(void)sqr_cancel {
-    [_connection cancel];
-    [self stopRunLoop];
+    [_task cancel];
 }
 #pragma mark - network state
 
@@ -273,37 +197,7 @@ static bool SQRPlayerThreadActive = false;
     });
 }
 
-#pragma mark - handle connection
-- (nullable NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(nullable NSURLResponse *)response
-{
-    [self _setNetworkActive:YES];
-
-
-    if (response)
-    {
-        self.loadingRequest.redirect = request;
-    }
-    return request;
-}
-
-/** text/plain
- text/html
- image/jpeg
- image/png
- audio/mpeg
- audio/ogg
- audio/..
- video/mp4
- application/octet-stream
- …
- */
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    if ([self isCancelled]) {
-        [self handleFinished];
-        return;
-    }
-    
+-(void)_recieveResponse:(NSURLResponse *)response {
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse * httpResponse = (NSHTTPURLResponse *)response;
         NSString * mimeTeyp = [httpResponse MIMEType];
@@ -339,52 +233,85 @@ static bool SQRPlayerThreadActive = false;
     }
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    if ([self isCancelled]) {
-        [self handleFinished];
-        return;
-    }
+-(void)_recieveData:(NSData *)data{
     if (data.bytes && [_cacheFile saveData:data atOffset:_offset synchronize:NO])
     {
         _dataSaved = YES;
         _offset += [data length];
         [self.loadingRequest.dataRequest respondWithData:data];
     }
-    
-    retryCount = 5; //重置重试次数
 }
+#pragma mark - url sesson delegate
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    LOG_I(@"远程任务完成: %@",NSStringFromRange(_range));
-
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+didCompleteWithError:(nullable NSError *)error {
     [self synchronizeCacheFileIfNeeded];
-    
     [self _setNetworkActive:NO];
-    [self handleFinished];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
+    
     if ([self isCancelled]) {
         [self handleFinished];
         return;
     }
-    if (retryCount>0 && [self allowAccessNetwork]) {
-        sleep((int)retryInterval);
-        [self synchronizeCacheFileIfNeeded];
-        NSRange newRange = NSMakeRange(_offset, NSMaxRange(_range) - _offset);
-        [self startURLRequestWithRequest:self.loadingRequest range:newRange];
-        return;
+    
+    if (!error) {
+        LOG_I(@"远程任务完成: %@",NSStringFromRange(_range));
+        [self _setNetworkActive:NO];
+        [self handleFinished];
     }
-    
-    [self synchronizeCacheFileIfNeeded];
-    _error = error;
-    
-    [self _setNetworkActive:NO];
+    else {
+        LOG_E(@"远程任务失败: %@",error);
+        
+        if (retryCount>0 && [self allowAccessNetwork]) {
+            sleep((int)retryInterval);
+            [self synchronizeCacheFileIfNeeded];
+            NSRange newRange = NSMakeRange(_offset, NSMaxRange(_range) - _offset);
+            [self startURLRequestWithRequest:self.loadingRequest range:newRange];
+            return;
+        }
+        _error = error;
+        [self handleFinished];
+    }
+}
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+didReceiveResponse:(NSURLResponse *)response
+ completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler {    
+    [self _recieveResponse:response];
 }
 
+- (void)URLSession:(NSURLSession *)session
+          dataTask:(NSURLSessionDataTask *)dataTask
+    didReceiveData:(NSData *)data {
+    [self _recieveData:data];
+    retryCount = 5; //重置重试次数
+}
+
+#pragma mark - handle connection
+
+- (nullable NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(nullable NSURLResponse *)response
+{
+    [self _setNetworkActive:YES];
+
+
+    if (response)
+    {
+        self.loadingRequest.redirect = request;
+    }
+    return request;
+}
+
+/** text/plain
+ text/html
+ image/jpeg
+ image/png
+ audio/mpeg
+ audio/ogg
+ audio/..
+ video/mp4
+ application/octet-stream
+ …
+ */
 - (void)setFinished:(BOOL)finished
 {
     [self willChangeValueForKey:@"isFinished"];

@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		D9079A7121C8E19B0020CBB6 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9079A6F21C8E1580020CBB6 /* CoreServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		D9079A8A21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */; };
-		D9079A8B21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9079AA521C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9121C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m */; };
 		D9079AA621C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9721C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m */; };
 		D9079AA721C8E8FF0020CBB6 /* SQRCacheSupportUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D9079A9821C8E8FF0020CBB6 /* SQRCacheSupportUtils.m */; };
@@ -40,31 +38,8 @@
 		D92806CC1F31FD29000F8E53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D92806CB1F31FD29000F8E53 /* Assets.xcassets */; };
 		D92806CF1F31FD29000F8E53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D92806CD1F31FD29000F8E53 /* LaunchScreen.storyboard */; };
 		D98984061F41CEF100C24A07 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = D98984051F41CEF100C24A07 /* 1.m4a */; };
+		D9BB1E912201969C00086905 /* SQRDataDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BB1E902201969C00086905 /* SQRDataDownloader.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		D9079A8C21C8E88F0020CBB6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D92806B41F31FD29000F8E53 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D9079A3521C8DDF70020CBB6;
-			remoteInfo = SQRAudioPlayer;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		D9079A8021C8E6E80020CBB6 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D9079A8B21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D9079A3621C8DDF70020CBB6 /* SQRAudioPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SQRAudioPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +78,8 @@
 		D92806CE1F31FD29000F8E53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D92806D01F31FD29000F8E53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D98984051F41CEF100C24A07 /* 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1.m4a; sourceTree = "<group>"; };
+		D9BB1E8F2201969C00086905 /* SQRDataDownloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SQRDataDownloader.h; sourceTree = "<group>"; };
+		D9BB1E902201969C00086905 /* SQRDataDownloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SQRDataDownloader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,7 +95,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9079A8A21C8E88F0020CBB6 /* SQRAudioPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,21 +136,23 @@
 			isa = PBXGroup;
 			children = (
 				D9079A9021C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.h */,
-				D9079A9121C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m */,
-				D9079A9221C8E8FF0020CBB6 /* SQRCacheSupportUtils.h */,
-				D9079A9321C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.h */,
-				D9079A9421C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.h */,
-				D9079A9521C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.h */,
-				D9079A9621C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.h */,
-				D9079A9721C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m */,
-				D9079A9821C8E8FF0020CBB6 /* SQRCacheSupportUtils.m */,
-				D9079A9921C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.h */,
 				D9079A9A21C8E8FF0020CBB6 /* SQRPlayerHandlerFactory.m */,
+				D9079A9221C8E8FF0020CBB6 /* SQRCacheSupportUtils.h */,
+				D9079A9821C8E8FF0020CBB6 /* SQRCacheSupportUtils.m */,
+				D9079A9421C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.h */,
 				D9079A9B21C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m */,
-				D9079A9C21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m */,
+				D9079A9521C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.h */,
 				D9079A9D21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m */,
 				D9079A9E21C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.h */,
+				D9079A9721C8E8FF0020CBB6 /* SQRPlayerItemRemoteCacheTask.m */,
+				D9079A9621C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.h */,
 				D9079A9F21C8E8FF0020CBB6 /* SQRPlayerItemCacheTask.m */,
+				D9079A9921C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.h */,
+				D9079A9121C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m */,
+				D9079A9321C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.h */,
+				D9079A9C21C8E8FF0020CBB6 /* SQRPlayerItemCacheLoader.m */,
+				D9BB1E8F2201969C00086905 /* SQRDataDownloader.h */,
+				D9BB1E902201969C00086905 /* SQRDataDownloader.m */,
 			);
 			path = cache;
 			sourceTree = "<group>";
@@ -265,12 +243,10 @@
 				D92806B81F31FD29000F8E53 /* Sources */,
 				D92806B91F31FD29000F8E53 /* Frameworks */,
 				D92806BA1F31FD29000F8E53 /* Resources */,
-				D9079A8021C8E6E80020CBB6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				D9079A8D21C8E88F0020CBB6 /* PBXTargetDependency */,
 			);
 			name = SQRAudioPlayerDemo;
 			productName = SQRAudioPlayerDemo;
@@ -361,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9079AA521C8E8FF0020CBB6 /* SQRPlayerItemLocalCacheTask.m in Sources */,
+				D9BB1E912201969C00086905 /* SQRDataDownloader.m in Sources */,
 				D9079AA921C8E8FF0020CBB6 /* SQRPlayerItemCacheFile.m in Sources */,
 				D9079AAE21C8E8FF0020CBB6 /* SQRMediaItem.m in Sources */,
 				D9079AAB21C8E8FF0020CBB6 /* AVPlayerItem+SQRCacheSupport.m in Sources */,
@@ -377,14 +354,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		D9079A8D21C8E88F0020CBB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D9079A3521C8DDF70020CBB6 /* SQRAudioPlayer */;
-			targetProxy = D9079A8C21C8E88F0020CBB6 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D92806C81F31FD29000F8E53 /* Main.storyboard */ = {

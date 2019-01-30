@@ -62,7 +62,7 @@
 #ifdef SingleQueue
         _singleQueue = [[NSOperationQueue alloc] init];
         _singleQueue.name = @"singleQueue";
-        _singleQueue.maxConcurrentOperationCount = 1;
+        _singleQueue.maxConcurrentOperationCount = 5;
 #endif
     }
     return self;
@@ -283,14 +283,15 @@
     if (cached)
     {
         task = [[SQRPlayerItemLocalCacheTask alloc] initWithCacheFile:self.cacheFile loadingRequest:_currentRequest range:range];
-        LOG_I(@"本地任务:  %@ - %@ \n",NSStringFromRange(range),queue.name);
+        LOG_I(@"创建本地任务:  %@ \n",NSStringFromRange(range));
     }
     else
     {
         task = [[SQRPlayerItemRemoteCacheTask alloc] initWithCacheFile:self.cacheFile loadingRequest:_currentRequest range:range];
         [(SQRPlayerItemRemoteCacheTask *)task setResponse:_response];
-        LOG_I(@"远程任务:  %@ - %@ \n,",NSStringFromRange(range),queue.name);
+        LOG_I(@"创建远程任务(%@) \n,",NSStringFromRange(range));
     }
+    
     __weak typeof(self)weakSelf = self;
     task.finishBlock = ^(SQRPlayerItemCacheTask *task, NSError *error)
     {
@@ -349,7 +350,7 @@
     return;
 #endif
     NSOperationQueue * queue = [[NSOperationQueue alloc] init];
-    queue.maxConcurrentOperationCount = 1;
+    queue.maxConcurrentOperationCount = 5;
     queue.name = [self keyForLoadingRequest:loadingRequest];
     
     _queues[[self keyForLoadingRequest:loadingRequest]] = queue;
