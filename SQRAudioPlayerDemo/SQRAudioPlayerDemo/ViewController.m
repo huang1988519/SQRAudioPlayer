@@ -55,10 +55,10 @@
 - (IBAction)playTest:(id)sender {
     SQRMediaItem * item = [SQRMediaItem new];
     item.assetUrls = @[[NSURL URLWithString:@"http://audio.xmcdn.com/group7/M0B/1B/CE/wKgDWlV2iSWwdkEQAEuBnDfPtxw914.m4a"]];
-    item.assetUrls = @[[NSURL URLWithString:@"http://t33.tingchina.com/yousheng/%E5%88%91%E4%BE%A6%E6%8E%A8%E7%90%86/%E4%BD%99%E7%BD%AA/001_%E5%A5%BD%E4%BA%8B%E4%B8%8A%E9%97%A8.mp3?key=883770cf8a033ba31a7b1a83a250f5e8_598462348"]];
+    item.assetUrls = @[[NSURL URLWithString:@"http://101.96.10.45/yst8-service.iphone2030.com/downloads/0/4/4/0446d29a9ebfede8f3ceaf9edc81a767.mp3"]];
     
     [_player prepareToPlay:item complete:^( NSError *error) {
-        [_player seekTo:400];
+//        [_player seekTo:400];
         [_player play];
     }];
 }
@@ -140,6 +140,7 @@
 }
 
 -(void)mediaPlayerWillChangeState:(SQRPlayer *)player state:(SQRMediaPlaybackState)state {
+    LOG_E(@"播放器 will ChangeState %d ",state);
 }
 
 -(void)mediaPlayerDidFailedWithError:(NSError *)error player:(SQRPlayer *)player media:(SQRMediaItem *)item {
